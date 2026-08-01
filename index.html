@@ -121,23 +121,38 @@
       }
       animateSky();
 
-      // Función lirios araña
-      function growGarden() {
-        const garden = document.getElementById("garden-container");
-        garden.innerHTML = "";
-        const numberOfSpiderlilies = 12;
+    // Función para hacer crecer los Lirios Araña
+function growGarden() {
+  const garden = document.getElementById("garden-container");
+  garden.innerHTML = "";
+  const numberOfLilies = 12; // Puedes cambiar la cantidad de lirios
 
-        for (let i = 0; i < numberOfSpiderlilies; i++) {
-          const spiderlilies = document.createElement("div");
-          spiderlilies.className = "tulip";
-          spiderlilies.style.animationDelay = `${i * 0.3}s`;
-          spiderlilies.innerHTML = `
-            <div class="spiderlilies-flower"></div>
-            <div class="spiderlilies-stem"></div>
-          `;
-          garden.appendChild(spiderlilies);
-        }
-      }
+  for (let i = 0; i < numberOfLilies; i++) {
+    const lily = document.createElement("div");
+    lily.className = "spider-lily";
+    lily.style.animationDelay = `${i * 0.3}s`;
+
+    lily.innerHTML = `
+      <div class="lily-flower">
+        <div class="lily-petal"></div>
+        <div class="lily-petal"></div>
+        <div class="lily-petal"></div>
+        <div class="lily-petal"></div>
+        <div class="lily-petal"></div>
+        <div class="lily-petal"></div>
+        <div class="lily-stamen"></div>
+        <div class="lily-stamen"></div>
+        <div class="lily-stamen"></div>
+        <div class="lily-stamen"></div>
+        <div class="lily-stamen"></div>
+        <div class="lily-stamen"></div>
+      </div>
+      <div class="lily-stem"></div>
+    `;
+    garden.appendChild(lily);
+  }
+}
+
 
       // Al hacer clic en "Ábrelo ❤️"
       startBtn.onclick = function() {
