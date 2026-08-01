@@ -120,39 +120,155 @@
         requestAnimationFrame(animateSky);
       }
       animateSky();
-
-    // Función para hacer crecer los Lirios Araña
+    
+// Función para generar el Ramo Elegante con Papel Coreano y Flores Mixtas
 function growGarden() {
   const garden = document.getElementById("garden-container");
   garden.innerHTML = "";
-  const numberOfLilies = 12; // Puedes cambiar la cantidad de lirios
 
-  for (let i = 0; i < numberOfLilies; i++) {
-    const lily = document.createElement("div");
-    lily.className = "spider-lily";
-    lily.style.animationDelay = `${i * 0.3}s`;
+  const bouquetHTML = `
+    <div class="bouquet-wrapper">
+      <svg class="bouquet-svg" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Gradientes Papel Coreano -->
+          <linearGradient id="koreanPink" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fbcfe8" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#f472b6" stop-opacity="0.9"/>
+          </linearGradient>
+          <linearGradient id="koreanWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
+            <stop offset="100%" stop-color="#f3f4f6" stop-opacity="0.9"/>
+          </linearGradient>
+          <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ec4899"/>
+            <stop offset="100%" stop-color="#be185d"/>
+          </linearGradient>
 
-    lily.innerHTML = `
-      <div class="lily-flower">
-        <div class="lily-petal"></div>
-        <div class="lily-petal"></div>
-        <div class="lily-petal"></div>
-        <div class="lily-petal"></div>
-        <div class="lily-petal"></div>
-        <div class="lily-petal"></div>
-        <div class="lily-stamen"></div>
-        <div class="lily-stamen"></div>
-        <div class="lily-stamen"></div>
-        <div class="lily-stamen"></div>
-        <div class="lily-stamen"></div>
-        <div class="lily-stamen"></div>
-      </div>
-      <div class="lily-stem"></div>
-    `;
-    garden.appendChild(lily);
-  }
+          <!-- Gradientes Flores -->
+          <linearGradient id="tulipWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#e2e8f0"/>
+          </linearGradient>
+          <linearGradient id="tulipPink" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#fce7f3"/>
+            <stop offset="100%" stop-color="#f472b6"/>
+          </linearGradient>
+          <linearGradient id="roseWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#cbd5e1"/>
+          </linearGradient>
+          <linearGradient id="rosePink" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fbcfe8"/>
+            <stop offset="100%" stop-color="#db2777"/>
+          </linearGradient>
+          <linearGradient id="spiderRed" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ff1744"/>
+            <stop offset="100%" stop-color="#990000"/>
+          </linearGradient>
+
+          <!-- Moldes / Macros de Flores -->
+          <!-- Tulipán -->
+          <g id="tulip-w">
+            <path d="M 0 0 C -12 -15, -15 -35, 0 -45 C 15 -35, 12 -15, 0 0 Z" fill="url(#tulipWhite)" />
+            <path d="M -8 -5 C -18 -20, -10 -38, 0 -45 C 5 -30, 0 -15, -8 -5 Z" fill="#f8fafc" opacity="0.8"/>
+            <path d="M 8 -5 C 18 -20, 10 -38, 0 -45 C -5 -30, 0 -15, 8 -5 Z" fill="#e2e8f0" opacity="0.8"/>
+          </g>
+          <g id="tulip-p">
+            <path d="M 0 0 C -12 -15, -15 -35, 0 -45 C 15 -35, 12 -15, 0 0 Z" fill="url(#tulipPink)" />
+            <path d="M -8 -5 C -18 -20, -10 -38, 0 -45 C 5 -30, 0 -15, -8 -5 Z" fill="#fbcfe8" opacity="0.8"/>
+            <path d="M 8 -5 C 18 -20, 10 -38, 0 -45 C -5 -30, 0 -15, 8 -5 Z" fill="#f472b6" opacity="0.8"/>
+          </g>
+
+          <!-- Rosa -->
+          <g id="rose-w">
+            <circle cx="0" cy="-15" r="16" fill="url(#roseWhite)"/>
+            <path d="M -10 -20 C -5 -28, 5 -28, 10 -20 C 12 -10, -12 -10, -10 -20 Z" fill="#e2e8f0"/>
+            <path d="M -6 -14 C -2 -20, 2 -20, 6 -14 C 8 -8, -8 -8, -6 -14 Z" fill="#ffffff"/>
+          </g>
+          <g id="rose-p">
+            <circle cx="0" cy="-15" r="16" fill="url(#rosePink)"/>
+            <path d="M -10 -20 C -5 -28, 5 -28, 10 -20 C 12 -10, -12 -10, -10 -20 Z" fill="#f472b6"/>
+            <path d="M -6 -14 C -2 -20, 2 -20, 6 -14 C 8 -8, -8 -8, -6 -14 Z" fill="#fbcfe8"/>
+          </g>
+
+          <!-- Lirio Araña Rojo -->
+          <g id="spider-lily">
+            <path d="M0,0 Q-15,-15 -25,-10 Q-15,-5 0,0" fill="url(#spiderRed)"/>
+            <path d="M0,0 Q15,-15 25,-10 Q15,-5 0,0" fill="url(#spiderRed)"/>
+            <path d="M0,0 Q-18,-5 -28,10 Q-15,5 0,0" fill="url(#spiderRed)"/>
+            <path d="M0,0 Q18,-5 28,10 Q15,5 0,0" fill="url(#spiderRed)"/>
+            <path d="M0,0 Q-8,-25 0,-32 Q8,-25 0,0" fill="url(#spiderRed)"/>
+            <!-- Estambres -->
+            <path d="M0,0 Q-20,-28 -30,-25 M0,0 Q20,-28 30,-25 M0,0 Q-10,-35 -12,-38 M0,0 Q10,-35 12,-38 M0,0 Q-25,-12 -35,-8 M0,0 Q25,-12 35,-8" stroke="#ff80ab" stroke-width="1.2" fill="none"/>
+            <circle cx="-30" cy="-25" r="1.5" fill="#ffd700"/>
+            <circle cx="30" cy="-25" r="1.5" fill="#ffd700"/>
+            <circle cx="-12" cy="-38" r="1.5" fill="#ffd700"/>
+            <circle cx="12" cy="-38" r="1.5" fill="#ffd700"/>
+            <circle cx="-35" cy="-8" r="1.5" fill="#ffd700"/>
+            <circle cx="35" cy="-8" r="1.5" fill="#ffd700"/>
+          </g>
+        </defs>
+
+        <!-- CAPA POSTERIOR PAPEL COREANO -->
+        <path d="M 60 220 L 120 450 L 280 450 L 340 220 L 370 120 L 200 170 L 30 120 Z" fill="url(#koreanPink)" opacity="0.85"/>
+        <path d="M 80 200 L 130 440 L 270 440 L 320 200 L 350 100 L 200 150 L 50 100 Z" fill="url(#koreanWhite)"/>
+
+        <!-- TALLOS -->
+        <g stroke="#2e7d32" stroke-width="3" opacity="0.7">
+          <line x1="200" y1="200" x2="180" y2="420"/>
+          <line x1="180" y1="200" x2="195" y2="420"/>
+          <line x1="220" y1="200" x2="210" y2="420"/>
+        </g>
+
+        <!-- ARREGLO DE FLORES -->
+        <!-- 4 Tulipanes Blancos -->
+        <use href="#tulip-w" x="140" y="210" transform="scale(0.9)"/>
+        <use href="#tulip-w" x="240" y="210" transform="scale(0.9)"/>
+        <use href="#tulip-w" x="180" y="160" transform="scale(0.95)"/>
+        <use href="#tulip-w" x="210" y="160" transform="scale(0.95)"/>
+
+        <!-- 4 Tulipanes Rosados Bajas -->
+        <use href="#tulip-p" x="120" y="250" transform="scale(0.95)"/>
+        <use href="#tulip-p" x="260" y="250" transform="scale(0.95)"/>
+        <use href="#tulip-p" x="160" y="180"/>
+        <use href="#tulip-p" x="230" y="180"/>
+
+        <!-- 3 Rosas Blancas -->
+        <use href="#rose-w" x="150" y="230"/>
+        <use href="#rose-w" x="240" y="230"/>
+        <use href="#rose-w" x="195" y="140"/>
+
+        <!-- 3 Rosas Rosadas Bajas -->
+        <use href="#rose-p" x="195" y="220" transform="scale(1.1)"/>
+        <use href="#rose-p" x="160" y="280"/>
+        <use href="#rose-p" x="230" y="280"/>
+
+        <!-- 8 Lirios Araña Rojos (Distribuidos para enmarcar el ramo) -->
+        <use href="#spider-lily" x="100" y="160"/>
+        <use href="#spider-lily" x="290" y="160"/>
+        <use href="#spider-lily" x="70" y="220"/>
+        <use href="#spider-lily" x="320" y="220"/>
+        <use href="#spider-lily" x="120" y="120"/>
+        <use href="#spider-lily" x="270" y="120"/>
+        <use href="#spider-lily" x="195" y="100" transform="scale(1.1)"/>
+        <use href="#spider-lily" x="195" y="270"/>
+
+        <!-- CAPA FRONTAL PAPEL COREANO (PLIEGUES FRONTALES Y LAZO) -->
+        <path d="M 70 260 L 140 430 Q 200 450 260 430 L 330 260 Q 200 310 70 260 Z" fill="url(#koreanWhite)" opacity="0.95"/>
+        <path d="M 90 280 L 150 430 Q 200 445 250 430 L 310 280 Q 200 320 90 280 Z" fill="url(#koreanPink)" opacity="0.85"/>
+
+        <!-- Lazo Elegante -->
+        <path d="M 170 375 Q 200 365 230 375 Q 210 395 200 385 Q 190 395 170 375 Z" fill="url(#ribbonGrad)"/>
+        <circle cx="200" cy="378" r="6" fill="#be185d"/>
+        <!-- Caídas del Lazo -->
+        <path d="M 196 382 Q 185 420 165 450 L 180 452 Q 198 422 200 382 Z" fill="url(#ribbonGrad)"/>
+        <path d="M 204 382 Q 215 420 235 450 L 220 452 Q 202 422 200 382 Z" fill="url(#ribbonGrad)"/>
+      </svg>
+    </div>
+  `;
+
+  garden.innerHTML = bouquetHTML;
 }
-
 
       // Al hacer clic en "Ábrelo ❤️"
       startBtn.onclick = function() {
