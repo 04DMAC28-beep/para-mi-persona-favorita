@@ -26,7 +26,48 @@
   </section>
 
   <!-- ESCENA PRINCIPAL (Jardín y Contenidos) -->
-  <main id="main-scene" class="hidden">
+  <mai<main id="main-scene" class="hidden">
+  
+  <!-- 1. El jardín donde van a crecer los tulipanes -->
+  <div id="garden-container"></div>
+
+  <!-- 2. Mensaje tipo máquina de escribir (oculto al inicio) -->
+  <div id="typewriter-container" class="message-card hidden-element">
+    <p id="typewriter-text"></p>
+  </div>
+
+  <!-- 3. Galería de fotos Polaroid (oculta al inicio) -->
+  <section id="photos-section" class="gallery-section hidden-element">
+    <div class="polaroid-grid">
+      <div class="polaroid">
+        <img src="foto1.jpg" alt="Foto 1">
+        <p>Nuestros primeros momentos ✨</p>
+      </div>
+      <div class="polaroid">
+        <img src="foto2.jpg" alt="Foto 2">
+        <p>Risas inolvidables 💖</p>
+      </div>
+      <div class="polaroid">
+        <img src="foto3.jpg" alt="Foto 3">
+        <p>Siempre tú 🌷</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Corazón interactivo (oculto al inicio) -->
+  <div id="heart-section" class="interactive-heart-container hidden-element">
+    <button id="heart-btn" class="pulse-heart">❤️</button>
+    <p class="heart-hint">Tócame para una sorpresa</p>
+  </div>
+
+  <!-- 5. Mensaje Final (oculto al inicio) -->
+  <footer id="final-section" class="final-message hidden-element">
+    <h2 class="constellation-title">✨ A & B ✨</h2>
+    <p class="final-text">"Te elegiría una y mil veces." 🌷❤️</p>
+  </footer>
+
+</main>
+n id="main-scene" class="hidden">
     
     <!-- Mensaje Tipo Máquina de Escribir -->
     <div id="typewriter-container" class="message-card">
@@ -56,6 +97,22 @@
       <button id="heart-btn" class="pulse-heart">❤️</button>
       <p class="heart-hint">Tócame para una sorpresa</p>
     </div>
+<!-- Propuesta Interactiva -->
+<footer id="final-section" class="final-message hidden-element">
+  <p class="question-text">"Sería tan afortunado de tenerte siempre a mi lado" 🌷❤️</p>
+  
+  <!-- Botones de Aceptar / Rechazar -->
+  <div id="proposal-buttons" class="proposal-container">
+    <button id="accept-btn" class="choice-btn accept">Aceptar 🥺</button>
+    <button id="reject-btn" class="choice-btn reject">Rechazar 😞</button>
+  </div>
+
+  <!-- Mensaje Final Secreto (Oculto hasta presionar Aceptar) -->
+  <div id="celebration-message" class="celebration hidden-element">
+    <h2>Gracias 🥰</h2>
+    <h1>TE AMO MUCHO MI AMOR 💗🫶</h1>
+  </div>
+</footer>
 
     <!-- Mensaje Final con Iniciales -->
     <footer class="final-message">
