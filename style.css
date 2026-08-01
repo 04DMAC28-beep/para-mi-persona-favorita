@@ -97,94 +97,48 @@ body {
   gap: 50px;
 }
 
-/* --- DIBUJO Y ANIMACIÓN DE LIRIOS ARAÑA --- */
+: rotate(300deg) skewY(15deg); }
+
+/* --- RAMO DE FLORES CON PAPEL COREANO --- */
 #garden-container {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  gap: 25px;
-  height: 220px;
-  width: 100%;
-}
-
-.spider-lily {
-  display: flex;
-  flex-direction: column;
   align-items: center;
+  width: 100%;
+  min-height: 380px;
+  margin-top: 10px;
   position: relative;
-  transform-origin: bottom center;
 }
 
-/* Tallo */
-.lily-stem {
-  width: 5px;
-  height: 0;
-  background: linear-gradient(to top, #1b5e20, #4caf50);
-  border-radius: 3px;
-  animation: stemGrow 2s ease-out forwards;
+.bouquet-wrapper {
+  position: relative;
+  width: 320px;
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: floatBouquet 4s ease-in-out infinite alternate;
 }
 
-/* Flor / Centro */
-.lily-flower {
-  position: relative;
-  width: 10px;
-  height: 10px;
+/* Efecto Flotante Suave */
+@keyframes floatBouquet {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-8px) rotate(1deg); }
+}
+
+/* Animación de Aparición al Florecer */
+.bouquet-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0px 15px 20px rgba(0,0,0,0.4));
   transform: scale(0);
-  animation: bloom 1.2s 1.8s ease-out forwards;
+  animation: bloomBouquet 2s ease-out forwards;
 }
 
-/* Pétalos finos y curvados */
-.lily-petal {
-  position: absolute;
-  width: 4px;
-  height: 35px;
-  background: linear-gradient(to top, #b71c1c, #ff1744);
-  border-radius: 50% 50% 0 0;
-  top: -30px;
-  left: 3px;
-  transform-origin: bottom center;
-  box-shadow: 0 0 8px rgba(255, 23, 68, 0.6);
+@keyframes bloomBouquet {
+  0% { transform: scale(0) translateY(40px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
 }
-
-.lily-petal:nth-child(1) { transform: rotate(0deg) skewY(15deg); }
-.lily-petal:nth-child(2) { transform: rotate(60deg) skewY(15deg); }
-.lily-petal:nth-child(3) { transform: rotate(120deg) skewY(15deg); }
-.lily-petal:nth-child(4) { transform: rotate(180deg) skewY(15deg); }
-.lily-petal:nth-child(5) { transform: rotate(240deg) skewY(15deg); }
-.lily-petal:nth-child(6) { transform: rotate(300deg) skewY(15deg); }
-
-/* Estambres largos (característicos del lirio araña) */
-.lily-stamen {
-  position: absolute;
-  width: 2px;
-  height: 50px;
-  background: #ff5252;
-  top: -45px;
-  left: 4px;
-  transform-origin: bottom center;
-}
-
-.lily-stamen::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -2px;
-  width: 6px;
-  height: 4px;
-  background: #ffd700;
-  border-radius: 50%;
-  box-shadow: 0 0 5px #ffd700;
-}
-
-.lily-stamen:nth-child(7) { transform: rotate(20deg); }
-.lily-stamen:nth-child(8) { transform: rotate(80deg); }
-.lily-stamen:nth-child(9) { transform: rotate(140deg); }
-.lily-stamen:nth-child(10) { transform: rotate(200deg); }
-.lily-stamen:nth-child(11) { transform: rotate(260deg); }
-.lily-stamen:nth-child(12) { transform: rotate(320deg); }
-
-@keyframes stemGrow { to { height: 150px; } }
-@keyframes bloom { to { transform: scale(1); } }
 
 /* Mensaje Card */
 .message-card {
