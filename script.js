@@ -34,6 +34,60 @@ document.addEventListener("DOMContentLoaded", () => {
   transform: translateY(0);
   pointer-events: auto;
 }
+// Función para crear tulipanes en el jardín
+function growGarden() {
+  const garden = document.getElementById("garden-container");
+  garden.innerHTML = ""; // Limpiar
+  
+  const numberOfTulips = 7; // Cantidad de tulipanes que quieres que broten
+
+  for (let i = 0; i < numberOfTulips; i++) {
+    const tulip = document.createElement("div");
+    tulip.className = "tulip";
+    // Variamos un poco el tiempo de aparición de cada tulipán para que sea natural
+    tulip.style.animationDelay = `${i * 0.3}s`;
+
+    tulip.innerHTML = `
+      <div class="tulip-flower"></div>
+      <div class="tulip-stem"></div>
+    `;
+    garden.appendChild(tulip);
+  }
+}
+
+// Acción al presionar el botón "Ábrelo ❤️"
+startBtn.addEventListener("click", () => {
+  bgMusic.play().catch(err => console.log(err));
+
+  hero.classList.add("fade-out");
+  
+  setTimeout(() => {
+    hero.style.display = "none";
+    mainScene.classList.remove("hidden");
+    
+    // PASO 1: Crecen los tulipanes inmediatamente
+    growGarden();
+
+    // PASO 2: A los 3.5 segundos, aparece el mensaje y empieza la máquina de escribir
+    setTimeout(() => {
+      const msgBox = document.getElementById("typewriter-container");
+      msgBox.classList.add("show-element");
+      startTypewriter();
+    }, 3500);
+
+    // PASO 3: A los 8.5 segundos (cuando termina de escribirse la carta), aparecen las fotos
+    setTimeout(() => {
+      document.getElementById("photos-section").classList.add("show-element");
+    }, 8500);
+
+    // PASO 4: A los 11 segundos, aparece el corazón interactivo y el mensaje final
+    setTimeout(() => {
+      document.getElementById("heart-section").classList.add("show-element");
+      document.getElementById("final-section").classList.add("show-element");
+    }, 11000);
+
+  }, 1500);
+});
 
 /* --- DIBUJO Y ANIMACIÓN DE TULIPANES --- */
 #garden-container {
@@ -208,6 +262,79 @@ document.addEventListener("DOMContentLoaded", () => {
   to {
     transform: translateY(105vh) rotate(360deg);
   }
+}
+// Lógica para la propuesta y botones interactivos
+const acceptBtn = document.getElementById("accept-btn");
+const rejectBtn = document.getElementById("reject-btn");
+const proposalButtons = document.getElementById("proposal-buttons");
+const celebrationMessage = document.getElementById("celebration-message");
+
+let rejectClicks = 0; // Contador de clics en rechazar
+
+rejectBtn.addEventListener("click", () => {
+  rejectClicks++;
+
+  if (rejectClicks <= 4) {
+    // Agrandar Aceptar
+    const acceptScale = 1 + (rejectClicks * 0.35); // Crece gradualmente
+    const acceptFontSize = 1.1 + (rejectClicks * 0.2);
+    acceptBtn.style.transform = `scale(${acceptScale})`;
+    acceptBtn.style.fontSize = `${acceptFontSize}rem`;
+
+    // Encoger Rechazar
+    const rejectScale = 1 - (rejectClicks * 0.18); // Se encoge gradualmente
+    const rejectFontSize = 1.1 - (rejectClicks * 0.15);
+    rejectBtn.style.transform = `scale(${rejectScale})`;
+    rejectBtn.style.fontSize = `${rejectFontSize}rem`;
+
+  } else {
+    // Si supera los 4 clics, REINICIAR tamaños
+    rejectClicks = 0;
+    acceptBtn.style.transform = "scale(1)";
+    acceptBtn.style.fontSize = "1.1rem";
+    rejectBtn.style.transform = "scale(1)";
+    rejectBtn.style.fontSize = "1.1rem";
+  }
+});
+
+// Acción al presionar "Aceptar 🥺"
+acceptBtn.addEventListener("click", () => {
+  // Ocultar los botones
+  proposalButtons.style.display = "none";
+
+  // Mostrar el mensaje final amoroso
+  celebrationMessage.classList.remove("hidden-element");
+  celebrationMessage.classList.add("show-element");
+
+  // Iniciar la lluvia CONSTANTE de pétalos
+  startInfinitePetals();
+});
+
+// Función para lluvia infinita de pétalos
+function startInfinitePetals() {
+  const petals = ["🌸", "🌺", "🌷", "💖"];
+  
+  // Crea un pétalo cada 250 milisegundos
+  setInterval(() => {
+    const petal = document.createElement("div");
+    petal.className = "falling-petal";
+    petal.textContent = petals[Math.floor(Math.random() * petals.length)];
+    
+    // Posición horizontal y tamaño aleatorio
+    petal.style.left = Math.random() * 100 + "vw";
+    petal.style.fontSize = Math.random() * 15 + 15 + "px";
+    
+    // Duración de la caída aleatoria (entre 3 y 6 segundos)
+    const duration = Math.random() * 3 + 3;
+    petal.style.animationDuration = duration + "s";
+
+    document.body.appendChild(petal);
+
+    // Eliminar el elemento del DOM cuando termina de caer para no recargar el navegador
+    setTimeout(() => {
+      petal.remove();
+    }, duration * 1000);
+  }, 250);
 }
 
   // Sorpresa al hacer clic en el corazón
