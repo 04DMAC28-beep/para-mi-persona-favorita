@@ -121,21 +121,21 @@
       }
       animateSky();
 
-      // Función tulipanes
+      // Función lirios araña
       function growGarden() {
         const garden = document.getElementById("garden-container");
         garden.innerHTML = "";
-        const numberOfTulips = 5;
+        const numberOfSpiderlilies = 12;
 
-        for (let i = 0; i < numberOfTulips; i++) {
-          const tulip = document.createElement("div");
-          tulip.className = "tulip";
-          tulip.style.animationDelay = `${i * 0.3}s`;
-          tulip.innerHTML = `
-            <div class="tulip-flower"></div>
-            <div class="tulip-stem"></div>
+        for (let i = 0; i < numberOfSpiderlilies; i++) {
+          const spiderlilies = document.createElement("div");
+          spiderlilies.className = "tulip";
+          spiderlilies.style.animationDelay = `${i * 0.3}s`;
+          spiderlilies.innerHTML = `
+            <div class="spiderlilies-flower"></div>
+            <div class="spiderlilies-stem"></div>
           `;
-          garden.appendChild(tulip);
+          garden.appendChild(spiderlilies);
         }
       }
 
