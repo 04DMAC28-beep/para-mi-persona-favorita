@@ -97,46 +97,94 @@ body {
   gap: 50px;
 }
 
-/* Animación de Tulipanes */
+/* --- DIBUJO Y ANIMACIÓN DE LIRIOS ARAÑA --- */
 #garden-container {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 15px;
-  height: 200px;
+  gap: 25px;
+  height: 220px;
   width: 100%;
 }
 
-.tulip {
+.spider-lily {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform-origin: bottom center;
-  animation: growTulip 2.5s ease-out forwards;
-}
-
-.tulip-flower {
-  width: 35px;
-  height: 45px;
-  background: linear-gradient(to top, #ff4b2b, #ff758c);
-  border-radius: 50% 50% 45% 45%;
   position: relative;
-  box-shadow: 0 0 10px rgba(255, 75, 43, 0.5);
-  transform: scale(0);
-  animation: bloom 1.5s 1.5s ease-out forwards;
+  transform-origin: bottom center;
 }
 
-.tulip-stem {
-  width: 6px;
+/* Tallo */
+.lily-stem {
+  width: 5px;
   height: 0;
-  background: linear-gradient(to top, #2e7d32, #4caf50);
+  background: linear-gradient(to top, #1b5e20, #4caf50);
   border-radius: 3px;
   animation: stemGrow 2s ease-out forwards;
 }
 
-@keyframes stemGrow { to { height: 140px; } }
+/* Flor / Centro */
+.lily-flower {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  animation: bloom 1.2s 1.8s ease-out forwards;
+}
+
+/* Pétalos finos y curvados */
+.lily-petal {
+  position: absolute;
+  width: 4px;
+  height: 35px;
+  background: linear-gradient(to top, #b71c1c, #ff1744);
+  border-radius: 50% 50% 0 0;
+  top: -30px;
+  left: 3px;
+  transform-origin: bottom center;
+  box-shadow: 0 0 8px rgba(255, 23, 68, 0.6);
+}
+
+.lily-petal:nth-child(1) { transform: rotate(0deg) skewY(15deg); }
+.lily-petal:nth-child(2) { transform: rotate(60deg) skewY(15deg); }
+.lily-petal:nth-child(3) { transform: rotate(120deg) skewY(15deg); }
+.lily-petal:nth-child(4) { transform: rotate(180deg) skewY(15deg); }
+.lily-petal:nth-child(5) { transform: rotate(240deg) skewY(15deg); }
+.lily-petal:nth-child(6) { transform: rotate(300deg) skewY(15deg); }
+
+/* Estambres largos (característicos del lirio araña) */
+.lily-stamen {
+  position: absolute;
+  width: 2px;
+  height: 50px;
+  background: #ff5252;
+  top: -45px;
+  left: 4px;
+  transform-origin: bottom center;
+}
+
+.lily-stamen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: 6px;
+  height: 4px;
+  background: #ffd700;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #ffd700;
+}
+
+.lily-stamen:nth-child(7) { transform: rotate(20deg); }
+.lily-stamen:nth-child(8) { transform: rotate(80deg); }
+.lily-stamen:nth-child(9) { transform: rotate(140deg); }
+.lily-stamen:nth-child(10) { transform: rotate(200deg); }
+.lily-stamen:nth-child(11) { transform: rotate(260deg); }
+.lily-stamen:nth-child(12) { transform: rotate(320deg); }
+
+@keyframes stemGrow { to { height: 150px; } }
 @keyframes bloom { to { transform: scale(1); } }
-@keyframes growTulip { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 
 /* Mensaje Card */
 .message-card {
