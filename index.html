@@ -1,533 +1,348 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Para Ti ❤️</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jardín Animado ✨</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- Música de fondo -->
-  <audio id="bg-music" src="musica.mp3" loop preload="auto"></audio>
-
-  <!-- Canvas para el fondo estrellado -->
   <canvas id="sky-canvas"></canvas>
 
-  <!-- PANTALLA DE INICIO -->
-  <section id="hero" class="hero-screen">
-    <div class="hero-content">
-      <h1 class="sparkle-title">🌅 Un Regalo Especial</h1>
-      <p>Haz clic para descubrir lo que guardo para ti</p>
-      <button id="start-btn" class="glow-btn">Ábrelo ❤️</button>
-    </div>
-  </section>
+  <main>
+    <header id="celebration-message">
+      <h2>Gracias 🥰</h2>
+      <h1>TE AMO MUCHO MI AMOR 💗🫶</h1>
+    </header>
 
-  <!-- ESCENA PRINCIPAL -->
-  <main id="main-scene" class="hidden">
-    
-    <!-- 1. Jardín de Tulipanes -->
+    <button id="heartBtn" class="action-btn" onclick="window.growGarden()">
+      Ver Jardín de Flores 🌸
+    </button>
+
     <div id="garden-container"></div>
-
-    <!-- 2. Carta con efecto Máquina de Escribir -->
-    <div id="typewriter-container" class="message-card hidden-element">
-      <p id="typewriter-text"></p>
-    </div>
-
-    <!-- 3. Galería Polaroid -->
-    <section id="photos-section" class="gallery-section hidden-element">
-      <div class="polaroid-grid">
-        <div class="polaroid">
-          <img src="foto1.jpg" alt="Foto 1">
-          <p>Nuestros primeros momentos ✨</p>
-        </div>
-        <div class="polaroid">
-          <img src="foto2.jpg" alt="Foto 2">
-          <p>Risas inolvidables 💖</p>
-        </div>
-        <div class="polaroid">
-          <img src="foto3.jpg" alt="Foto 3">
-          <p>Siempre tú 🌷</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. Corazón Interactivo -->
-    <div id="heart-section" class="interactive-heart-container hidden-element">
-      <button id="heart-btn" class="pulse-heart">❤️</button>
-      <p class="heart-hint">Tócame para una sorpresa</p>
-    </div>
-
-    <!-- 5. Propuesta y Cierre -->
-    <footer id="final-section" class="final-message hidden-element">
-      <p class="question-text">"Sería tan afortunado de tenerte siempre a mi lado" 🌷❤️</p>
-      
-      <div id="proposal-buttons" class="proposal-container">
-        <button id="accept-btn" class="choice-btn accept">Aceptar 🥺</button>
-        <button id="reject-btn" class="choice-btn reject">Rechazar 😞</button>
-      </div>
-
-      <div id="celebration-message" class="celebration hidden-element">
-        <h2>Gracias 🥰</h2>
-        <h1>TE AMO MUCHO MI AMOR 💗🫶</h1>
-      </div>
-    </footer>
-
   </main>
-<div id="garden-container"></div>
-  
+
   <script>
-
-    window.addEventListener("load", () => {
-      const startBtn = document.getElementById("start-btn");
-      const hero = document.getElementById("hero");
-      const mainScene = document.getElementById("main-scene");
-      const bgMusic = document.getElementById("bg-music");
-      const heartBtn = document.getElementById("heart-btn");
-
-      const typewriterElement = document.getElementById("typewriter-text");
-      const messageText = "Estas flores jamás podrán compararse con lo hermosa que eres, pero quería regalarte un pequeño jardín que florezca cada vez que pienses en nosotros. ❤️";
-
-      // Canvas y Estrellas
+    // --- 1. CONFIGURACIÓN DEL CIELO CON ESTRELLAS DE FONDO ---
+    (function initSky() {
       const canvas = document.getElementById("sky-canvas");
+      if (!canvas) return;
       const ctx = canvas.getContext("2d");
-      let width, height;
 
-      function resizeCanvas() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+      function resizeSky() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
       }
-      window.addEventListener("resize", resizeCanvas);
-      resizeCanvas();
+      resizeSky();
+      window.addEventListener("resize", resizeSky);
 
       const stars = Array.from({ length: 90 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 2,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        radius: Math.random() * 1.5 + 0.5,
         alpha: Math.random(),
-        speed: Math.random() * 0.02
+        speed: Math.random() * 0.02 + 0.005
       }));
 
-      function animateSky() {
-        ctx.clearRect(0, 0, width, height);
-        stars.forEach(star => {
-          star.alpha += star.speed;
-          if (star.alpha > 1 || star.alpha < 0) star.speed = -star.speed;
-          ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
+      function drawSky() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+          s.alpha += s.speed;
+          if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
           ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(s.alpha)})`;
           ctx.fill();
         });
-        requestAnimationFrame(animateSky);
+        requestAnimationFrame(drawSky);
       }
-      animateSky();
-290" y="210" transform="scale(0.95)"/>
+      drawSky();
+    })();
 
-      function growGarden() {
-  const container = document.getElementById("garden-container");
-  container.innerHTML = `<canvas id="flowerCanvas" width="480" height="520"></canvas>`;
+    // --- 2. FUNCIÓN GLOBAL DE CRECIMIENTO DEL JARDÍN ---
+    window.growGarden = function() {
+      const container = document.getElementById("garden-container");
+      if (!container) return;
 
-  const canvas = document.getElementById("flowerCanvas");
-  const ctx = canvas.getContext("2d");
+      // Inserción limpia del canvas del jardín
+      container.innerHTML = `<canvas id="flowerCanvas" width="480" height="520"></canvas>`;
+      const canvas = document.getElementById("flowerCanvas");
+      const ctx = canvas.getContext("2d");
 
-  let progress = 0; // Controla la animación de crecimiento (0 a 1)
+      let progress = 0; // Progreso de crecimiento de 0 a 1
 
-  // Configuración de las flores que componen el ramo/jardín
-  const flowers = [
-    // Lirios Araña (Arriba y extremos)
-    { type: 'spider', x: 240, maxY: 110, scale: 1.1 },
-    { type: 'spider', x: 140, maxY: 170, scale: 0.9 },
-    { type: 'spider', x: 340, maxY: 170, scale: 0.9 },
+      // Configuración de Flores (Tulipanes, 5-Pétalos y Lirios Araña)
+      const flowers = [
+        // Lirios Araña Neón (Nivel Superior)
+        { type: 'spider', x: 240, maxY: 100, scale: 1.1 },
+        { type: 'spider', x: 140, maxY: 160, scale: 0.9 },
+        { type: 'spider', x: 340, maxY: 160, scale: 0.9 },
 
-    // Tulipanes 3D (Cuerpo medio-alto)
-    { type: 'tulip',  x: 190, maxY: 190, scale: 1.0 },
-    { type: 'tulip',  x: 290, maxY: 190, scale: 1.0 },
-    { type: 'tulip',  x: 240, maxY: 240, scale: 1.1 },
+        // Tulipanes 3D Gradiente (Nivel Medio)
+        { type: 'tulip',  x: 185, maxY: 200, scale: 1.0 },
+        { type: 'tulip',  x: 295, maxY: 200, scale: 1.0 },
+        { type: 'tulip',  x: 240, maxY: 245, scale: 1.15 },
 
-    // Flores de 5 Pétalos de la referencia (Base)
-    { type: 'petal5', x: 150, maxY: 300, scale: 1.0 },
-    { type: 'petal5', x: 330, maxY: 300, scale: 1.0 },
-    { type: 'petal5', x: 240, maxY: 340, scale: 1.25 }
-  ];
+        // Flores Rosas 5 Pétalos con Centro Amarillo (Nivel Base)
+        { type: 'petal5', x: 150, maxY: 305, scale: 1.0 },
+        { type: 'petal5', x: 330, maxY: 305, scale: 1.0 },
+        { type: 'petal5', x: 240, maxY: 350, scale: 1.25 }
+      ];
 
-  // Partículas y Corazones Flotantes (En bucle como en el video)
-  const particles = Array.from({ length: 30 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 14 + 8,
-    speed: Math.random() * 1.5 + 0.6,
-    isHeart: Math.random() > 0.35,
-    opacity: Math.random() * 0.7 + 0.3
-  }));
+      // Partículas y Corazones Flotantes en Bucle
+      const particles = Array.from({ length: 32 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 14 + 8,
+        speed: Math.random() * 1.4 + 0.6,
+        isHeart: Math.random() > 0.35,
+        opacity: Math.random() * 0.7 + 0.3
+      }));
 
-  // Dibuja un tallo con curvas Bezier y efecto Neón
-  function drawStem(startX, startY, endX, endY, p) {
-    const curY = startY - (startY - endY) * p;
-    const midX = (startX + endX) / 2;
+      // DIBUJAR TALLOS CON HOJAS
+      function drawStem(startX, startY, endX, endY, p) {
+        const curY = startY - (startY - endY) * p;
+        const midX = (startX + endX) / 2;
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(startX, startY);
-    ctx.quadraticCurveTo(midX, (startY + curY) / 2, endX, curY);
-    ctx.strokeStyle = "#388e3c";
-    ctx.lineWidth = 5;
-    ctx.lineCap = "round";
-    ctx.shadowColor = "#81c784";
-    ctx.shadowBlur = 12;
-    ctx.stroke();
-
-    // Dibujar hojas a lo largo del tallo progresivamente
-    if (p > 0.4) {
-      const leafScale = Math.min((p - 0.4) * 2, 1);
-      drawLeaf((startX + endX) / 2 - 15, (startY + curY) / 2, -0.6, leafScale);
-      drawLeaf((startX + endX) / 2 + 15, (startY + curY) / 2, 0.6, leafScale);
-    }
-    ctx.restore();
-  }
-
-  // Dibujar Hoja Verde con gradiente
-  function drawLeaf(x, y, angle, scale) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.scale(scale, scale);
-
-    const grad = ctx.createLinearGradient(0, 0, 0, -30);
-    grad.addColorStop(0, "#1b5e20");
-    grad.addColorStop(1, "#66bb6a");
-
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.quadraticCurveTo(-15, -15, 0, -30);
-    ctx.quadraticCurveTo(15, -15, 0, 0);
-    ctx.fillStyle = grad;
-    ctx.shadowColor = "#a7f3d0";
-    ctx.shadowBlur = 8;
-    ctx.fill();
-    ctx.restore();
-  }
-
-  // DIBUJO 1: TULIPÁN 3D EN CANVAS
-  function drawTulip(x, y, scale) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.scale(scale, scale);
-
-    const gradBody = ctx.createRadialGradient(0, -20, 5, 0, -20, 30);
-    gradBody.addColorStop(0, "#ffb3c1");
-    gradBody.addColorStop(0.6, "#ff2a75");
-    gradBody.addColorStop(1, "#a00037");
-
-    // Resplandor Neón
-    ctx.shadowColor = "#ff4081";
-    ctx.shadowBlur = 18;
-
-    // Pétalo Trasero
-    ctx.beginPath();
-    ctx.ellipse(0, -25, 22, 32, 0, 0, Math.PI * 2);
-    ctx.fillStyle = gradBody;
-    ctx.fill();
-
-    // Pétalo Izquierdo
-    ctx.beginPath();
-    ctx.ellipse(-10, -20, 15, 28, -0.2, 0, Math.PI * 2);
-    ctx.fillStyle = "#ff758f";
-    ctx.fill();
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // Pétalo Derecho
-    ctx.beginPath();
-    ctx.ellipse(10, -20, 15, 28, 0.2, 0, Math.PI * 2);
-    ctx.fillStyle = "#ff4d6d";
-    ctx.fill();
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // Pétalo Centro Frontal Brillante
-    const gradCenter = ctx.createLinearGradient(0, -40, 0, 0);
-    gradCenter.addColorStop(0, "#ffffff");
-    gradCenter.addColorStop(1, "#ff80ab");
-
-    ctx.beginPath();
-    ctx.ellipse(0, -18, 12, 24, 0, 0, Math.PI * 2);
-    ctx.fillStyle = gradCenter;
-    ctx.fill();
-
-    ctx.restore();
-  }
-
-  // DIBUJO 2: FLOR 5 PÉTALOS DE LA REFERENCIA
-  function drawPetal5(x, y, scale) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.scale(scale, scale);
-
-    ctx.shadowColor = "#ff2a75";
-    ctx.shadowBlur = 16;
-
-    const petalGrad = ctx.createRadialGradient(0, -18, 2, 0, -18, 20);
-    petalGrad.addColorStop(0, "#ffccd5");
-    petalGrad.addColorStop(0.7, "#ff4d6d");
-    petalGrad.addColorStop(1, "#c9184a");
-
-    for (let i = 0; i < 5; i++) {
-      ctx.beginPath();
-      ctx.rotate((Math.PI * 2) / 5);
-      ctx.ellipse(0, -20, 13, 24, 0, 0, Math.PI * 2);
-      ctx.fillStyle = petalGrad;
-      ctx.fill();
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-    }
-
-    // Botón Centro Amarillo Brillante
-    ctx.beginPath();
-    ctx.arc(0, 0, 9, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffeb3b";
-    ctx.shadowColor = "#ffff00";
-    ctx.shadowBlur = 20;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(0, 0, 4, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-
-    ctx.restore();
-  }
-
-  // DIBUJO 3: LIRIO ARAÑA ROJO NEÓN
-  function drawSpiderLily(x, y, scale) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.scale(scale, scale);
-
-    ctx.shadowColor = "#ff1744";
-    ctx.shadowBlur = 20;
-
-    // Pétalos finos estilizados en abanico
-    const angles = [-0.8, -0.4, 0, 0.4, 0.8, 2.2, 2.6, 3.0, 3.4];
-    angles.forEach((ang) => {
-      ctx.save();
-      ctx.rotate(ang);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.quadraticCurveTo(-12, -25, 0, -40);
-      ctx.quadraticCurveTo(12, -25, 0, 0);
-      ctx.fillStyle = "#ff1744";
-      ctx.fill();
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
-      ctx.restore();
-    });
-
-    // Estambres curvados con puntas brillantes
-    const stamens = [-1.0, -0.5, 0, 0.5, 1.0];
-    stamens.forEach((st) => {
-      ctx.save();
-      ctx.rotate(st);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.quadraticCurveTo(-15, -35, -22, -48);
-      ctx.strokeStyle = "#ff80ab";
-      ctx.lineWidth = 1.8;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(-22, -48, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = "#ffeb3b";
-      ctx.shadowColor = "#ffff80";
-      ctx.shadowBlur = 10;
-      ctx.fill();
-      ctx.restore();
-    });
-
-    ctx.restore();
-  }
-
-  // DIBUJAR PARTÍCULAS / CORAZONES FLOTANTES
-  function drawParticles() {
-    particles.forEach((p) => {
-      p.y -= p.speed;
-      if (p.y < -20) p.y = canvas.height + 20;
-
-      ctx.save();
-      ctx.globalAlpha = p.opacity;
-      if (p.isHeart) {
-        ctx.font = `${p.size}px sans-serif`;
-        ctx.fillText("💗", p.x, p.y);
-      } else {
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
-        ctx.strokeStyle = "#ff80ab";
-        ctx.lineWidth = 2;
-        ctx.shadowColor = "#ff4081";
+        ctx.moveTo(startX, startY);
+        ctx.quadraticCurveTo(midX, (startY + curY) / 2, endX, curY);
+        ctx.strokeStyle = "#2e7d32";
+        ctx.lineWidth = 5;
+        ctx.lineCap = "round";
+        ctx.shadowColor = "#81c784";
         ctx.shadowBlur = 12;
         ctx.stroke();
-      }
-      ctx.restore();
-    });
-  }
 
-  // BUCLE PRINCIPAL DE ANIMACIÓN
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 1. Fondo de Partículas en bucle continuo
-    drawParticles();
-
-    // 2. Incrementar barra de tiempo/crecimiento
-    if (progress < 1) {
-      progress += 0.009;
-    }
-
-    // 3. Dibujar cada planta (Tallo + Flor correspondiente)
-    flowers.forEach((f) => {
-      drawStem(240, 510, f.x, f.maxY, progress);
-
-      // Florece gradualmente al llegar a su altura
-      if (progress > 0.5) {
-        const flowerProgress = Math.min((progress - 0.5) * 2, 1);
-        const currentScale = f.scale * flowerProgress;
-
-        if (f.type === 'tulip') drawTulip(f.x, f.maxY, currentScale);
-        if (f.type === 'petal5') drawPetal5(f.x, f.maxY, currentScale);
-        if (f.type === 'spider') drawSpiderLily(f.x, f.maxY, currentScale);
-      }
-    });
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
-}
-
-
-      // Al hacer clic en "Ábrelo ❤️"
-      startBtn.onclick = function() {
-        if(bgMusic) {
-          bgMusic.play().catch(e => console.log(e));
+        // Salida de hojas progresivas
+        if (p > 0.4) {
+          const leafScale = Math.min((p - 0.4) * 2, 1);
+          drawLeaf((startX + endX) / 2 - 14, (startY + curY) / 2, -0.6, leafScale);
+          drawLeaf((startX + endX) / 2 + 14, (startY + curY) / 2, 0.6, leafScale);
         }
-        
-        hero.classList.add("fade-out");
+        ctx.restore();
+      }
 
-        setTimeout(() => {
-          hero.style.display = "none";
-          mainScene.classList.remove("hidden");
+      // DIBUJAR HOJAS
+      function drawLeaf(x, y, angle, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.scale(scale, scale);
 
-          // 1. Crecen tulipanes
-          growGarden();
+        const grad = ctx.createLinearGradient(0, 0, 0, -30);
+        grad.addColorStop(0, "#1b5e20");
+        grad.addColorStop(1, "#66bb6a");
 
-          // 2. Carta
-          setTimeout(() => {
-            document.getElementById("typewriter-container").classList.add("show-element");
-            startTypewriter();
-          }, 3500);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(-15, -15, 0, -30);
+        ctx.quadraticCurveTo(15, -15, 0, 0);
+        ctx.fillStyle = grad;
+        ctx.shadowColor = "#a7f3d0";
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.restore();
+      }
 
-          // 3. Fotos
-          setTimeout(() => {
-            document.getElementById("photos-section").classList.add("show-element");
-          }, 8500);
+      // 1. TULIPÁN 3D
+      function drawTulip(x, y, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
 
-          // 4. Corazón y propuesta
-          setTimeout(() => {
-            document.getElementById("heart-section").classList.add("show-element");
-            document.getElementById("final-section").classList.add("show-element");
-          }, 11000);
+        const gradBody = ctx.createRadialGradient(0, -20, 5, 0, -20, 30);
+        gradBody.addColorStop(0, "#ffb3c1");
+        gradBody.addColorStop(0.6, "#ff2a75");
+        gradBody.addColorStop(1, "#a00037");
 
-        }, 1500);
-      };
+        ctx.shadowColor = "#ff4081";
+        ctx.shadowBlur = 18;
 
-      // Máquina de escribir
-      function startTypewriter() {
-        let index = 0;
-        typewriterElement.textContent = "";
-        const timer = setInterval(() => {
-          if (index < messageText.length) {
-            typewriterElement.textContent += messageText.charAt(index);
-            index++;
+        // Pétalo Trasero
+        ctx.beginPath();
+        ctx.ellipse(0, -25, 22, 32, 0, 0, Math.PI * 2);
+        ctx.fillStyle = gradBody;
+        ctx.fill();
+
+        // Pétalos Laterales
+        ctx.beginPath();
+        ctx.ellipse(-10, -20, 15, 28, -0.2, 0, Math.PI * 2);
+        ctx.fillStyle = "#ff758f";
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.ellipse(10, -20, 15, 28, 0.2, 0, Math.PI * 2);
+        ctx.fillStyle = "#ff4d6d";
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Centro Brillante
+        const gradCenter = ctx.createLinearGradient(0, -40, 0, 0);
+        gradCenter.addColorStop(0, "#ffffff");
+        gradCenter.addColorStop(1, "#ff80ab");
+
+        ctx.beginPath();
+        ctx.ellipse(0, -18, 12, 24, 0, 0, Math.PI * 2);
+        ctx.fillStyle = gradCenter;
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      // 2. FLOR 5 PÉTALOS CON CENTRO AMARILLO
+      function drawPetal5(x, y, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+
+        ctx.shadowColor = "#ff2a75";
+        ctx.shadowBlur = 16;
+
+        const petalGrad = ctx.createRadialGradient(0, -18, 2, 0, -18, 20);
+        petalGrad.addColorStop(0, "#ffccd5");
+        petalGrad.addColorStop(0.7, "#ff4d6d");
+        petalGrad.addColorStop(1, "#c9184a");
+
+        for (let i = 0; i < 5; i++) {
+          ctx.beginPath();
+          ctx.rotate((Math.PI * 2) / 5);
+          ctx.ellipse(0, -20, 13, 24, 0, 0, Math.PI * 2);
+          ctx.fillStyle = petalGrad;
+          ctx.fill();
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+        }
+
+        // Botón Amarillo Brillante
+        ctx.beginPath();
+        ctx.arc(0, 0, 9, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffeb3b";
+        ctx.shadowColor = "#ffff00";
+        ctx.shadowBlur = 20;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(0, 0, 4, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      // 3. LIRIO ARAÑA NEÓN
+      function drawSpiderLily(x, y, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+
+        ctx.shadowColor = "#ff1744";
+        ctx.shadowBlur = 20;
+
+        const angles = [-0.8, -0.4, 0, 0.4, 0.8, 2.2, 2.6, 3.0, 3.4];
+        angles.forEach((ang) => {
+          ctx.save();
+          ctx.rotate(ang);
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.quadraticCurveTo(-12, -25, 0, -40);
+          ctx.quadraticCurveTo(12, -25, 0, 0);
+          ctx.fillStyle = "#ff1744";
+          ctx.fill();
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        const stamens = [-1.0, -0.5, 0, 0.5, 1.0];
+        stamens.forEach((st) => {
+          ctx.save();
+          ctx.rotate(st);
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.quadraticCurveTo(-15, -35, -22, -48);
+          ctx.strokeStyle = "#ff80ab";
+          ctx.lineWidth = 1.8;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(-22, -48, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = "#ffeb3b";
+          ctx.shadowColor = "#ffff80";
+          ctx.shadowBlur = 10;
+          ctx.fill();
+          ctx.restore();
+        });
+
+        ctx.restore();
+      }
+
+      // PARTÍCULAS / CORAZONES FLOTANTES
+      function drawParticles() {
+        particles.forEach((p) => {
+          p.y -= p.speed;
+          if (p.y < -20) p.y = canvas.height + 20;
+
+          ctx.save();
+          ctx.globalAlpha = p.opacity;
+          if (p.isHeart) {
+            ctx.font = `${p.size}px sans-serif`;
+            ctx.fillText("💗", p.x, p.y);
           } else {
-            clearInterval(timer);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+            ctx.strokeStyle = "#ff80ab";
+            ctx.lineWidth = 2;
+            ctx.shadowColor = "#ff4081";
+            ctx.shadowBlur = 12;
+            ctx.stroke();
           }
-        }, 45);
+          ctx.restore();
+        });
       }
 
-      // Click corazón
-      heartBtn.onclick = function() {
-        alert("¡Eres mi persona favorita en todo el universo! 💖✨");
-        createPetalBurst();
-      };
+      // BUCLE DE ANIMACIÓN
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawParticles();
 
-      function createPetalBurst() {
-        for (let i = 0; i < 20; i++) {
-          const petal = document.createElement("div");
-          petal.innerHTML = "🌸";
-          petal.className = "falling-petal";
-          petal.style.left = Math.random() * 100 + "vw";
-          petal.style.fontSize = Math.random() * 20 + 15 + "px";
-          petal.style.animationDuration = (Math.random() * 2 + 2) + "s";
-          document.body.appendChild(petal);
-          setTimeout(() => petal.remove(), 4000);
+        if (progress < 1) {
+          progress += 0.009;
         }
+
+        flowers.forEach((f) => {
+          drawStem(240, 510, f.x, f.maxY, progress);
+
+          if (progress > 0.5) {
+            const flowerProgress = Math.min((progress - 0.5) * 2, 1);
+            const currentScale = f.scale * flowerProgress;
+
+            if (f.type === 'tulip') drawTulip(f.x, f.maxY, currentScale);
+            if (f.type === 'petal5') drawPetal5(f.x, f.maxY, currentScale);
+            if (f.type === 'spider') drawSpiderLily(f.x, f.maxY, currentScale);
+          }
+        });
+
+        requestAnimationFrame(animate);
       }
 
-      // Botones Aceptar / Rechazar
-      const acceptBtn = document.getElementById("accept-btn");
-      const rejectBtn = document.getElementById("reject-btn");
-      const proposalButtons = document.getElementById("proposal-buttons");
-      const celebrationMessage = document.getElementById("celebration-message");
+      animate();
+    };
 
-      let rejectClicks = 0;
-
-      rejectBtn.onclick = function() {
-        rejectClicks++;
-
-        if (rejectClicks <= 4) {
-          const acceptScale = 1 + (rejectClicks * 0.35);
-          const acceptFontSize = 1.1 + (rejectClicks * 0.2);
-          acceptBtn.style.transform = `scale(${acceptScale})`;
-          acceptBtn.style.fontSize = `${acceptFontSize}rem`;
-
-          const rejectScale = 1 - (rejectClicks * 0.18);
-          const rejectFontSize = 1.1 - (rejectClicks * 0.15);
-          rejectBtn.style.transform = `scale(${rejectScale})`;
-          rejectBtn.style.fontSize = `${rejectFontSize}rem`;
-        } else {
-          rejectClicks = 0;
-          acceptBtn.style.transform = "scale(1)";
-          acceptBtn.style.fontSize = "1.1rem";
-          rejectBtn.style.transform = "scale(1)";
-          rejectBtn.style.fontSize = "1.1rem";
-        }
-      };
-
-      acceptBtn.onclick = function() {
-        proposalButtons.style.display = "none";
-        celebrationMessage.classList.remove("hidden-element");
-        celebrationMessage.classList.add("show-element");
-        startInfinitePetals();
-      };
-
-      function startInfinitePetals() {
-        const petals = ["🌸", "🌺", "🌷", "💖"];
-        setInterval(() => {
-          const petal = document.createElement("div");
-          petal.className = "falling-petal";
-          petal.textContent = petals[Math.floor(Math.random() * petals.length)];
-          petal.style.left = Math.random() * 100 + "vw";
-          petal.style.fontSize = Math.random() * 15 + 15 + "px";
-          
-          const duration = Math.random() * 3 + 3;
-          petal.style.animationDuration = duration + "s";
-
-          document.body.appendChild(petal);
-          setTimeout(() => petal.remove(), duration * 1000);
-        }, 250);
+    // Vínculo secundario seguro por si acaso
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("heartBtn");
+      if (btn) {
+        btn.addEventListener("click", () => window.growGarden());
       }
     });
   </script>
