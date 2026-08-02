@@ -121,199 +121,221 @@
       }
       animateSky();
     
-// Función para generar el Ramo Extragrande con más flores
+  // Función para generar el Ramo HD 3D estilo Referencia + Corazones Flotantes
 function growGarden() {
   const garden = document.getElementById("garden-container");
   garden.innerHTML = "";
 
   const bouquetHTML = `
-    <div class="bouquet-wrapper" style="width: 380px; height: 480px;">
-      <svg class="bouquet-svg" viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg">
+    <div class="bouquet-wrapper">
+      <svg class="bouquet-svg" viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- Filtro de Resplandor Neón -->
-          <filter id="flowerGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          <!-- Filtro Neón Luminous -->
+          <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feComponentTransfer in="blur" result="glow">
+              <feFuncA type="linear" slope="1.8"/>
+            </feComponentTransfer>
+            <feMerge>
+              <feMergeNode in="glow"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
           </filter>
 
-          <filter id="spiderGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#ff1744" flood-opacity="0.8"/>
-          </filter>
-
-          <!-- Gradientes Papel Coreano -->
-          <linearGradient id="koreanPink" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#fbcfe8" stop-opacity="0.95"/>
-            <stop offset="50%" stop-color="#f472b6" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#db2777" stop-opacity="0.85"/>
+          <!-- Gradiente Papel Kraft (Estilo Foto 1) -->
+          <linearGradient id="kraftPaper" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f5d6ba"/>
+            <stop offset="50%" stop-color="#e6b894"/>
+            <stop offset="100%" stop-color="#c8966b"/>
           </linearGradient>
-          <linearGradient id="koreanWhite" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
-            <stop offset="100%" stop-color="#f1f5f9" stop-opacity="0.9"/>
+          
+          <linearGradient id="kraftInner" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#d4a373"/>
+            <stop offset="100%" stop-color="#a37248"/>
           </linearGradient>
 
-          <!-- Gradientes Flores -->
-          <radialGradient id="tulipWhiteHD" cx="50%" cy="30%" r="70%">
+          <!-- Gradientes Tallo e Hojas -->
+          <linearGradient id="stemGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#2e7d32"/>
+            <stop offset="50%" stop-color="#4caf50"/>
+            <stop offset="100%" stop-color="#1b5e20"/>
+          </linearGradient>
+
+          <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#66bb6a"/>
+            <stop offset="100%" stop-color="#1b5e20"/>
+          </linearGradient>
+
+          <!-- Gradiente Tulipán 3D (Foto 1) -->
+          <radialGradient id="tulipBody" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ff9ebb"/>
+            <stop offset="65%" stop-color="#ff2a75"/>
+            <stop offset="100%" stop-color="#b70043"/>
+          </radialGradient>
+          
+          <radialGradient id="tulipLight" cx="50%" cy="20%" r="50%">
             <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="65%" stop-color="#f1f5f9"/>
-            <stop offset="100%" stop-color="#cbd5e1"/>
-          </radialGradient>
-          <radialGradient id="tulipPinkHD" cx="50%" cy="30%" r="70%">
-            <stop offset="0%" stop-color="#ffdee9"/>
-            <stop offset="55%" stop-color="#ff758c"/>
-            <stop offset="100%" stop-color="#d81b60"/>
+            <stop offset="100%" stop-color="#ff80ab"/>
           </radialGradient>
 
-          <radialGradient id="roseWhiteHD" cx="40%" cy="30%" r="75%">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="70%" stop-color="#e2e8f0"/>
-            <stop offset="100%" stop-color="#94a3b8"/>
-          </radialGradient>
-          <radialGradient id="rosePinkHD" cx="40%" cy="30%" r="75%">
-            <stop offset="0%" stop-color="#fbcfe8"/>
-            <stop offset="60%" stop-color="#f43f5e"/>
-            <stop offset="100%" stop-color="#be123c"/>
+          <!-- Gradiente Flor 5 Pétalos (Foto 2) -->
+          <radialGradient id="petal5Grad" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#ffccd5"/>
+            <stop offset="60%" stop-color="#ff758f"/>
+            <stop offset="100%" stop-color="#c9184a"/>
           </radialGradient>
 
-          <!-- MOLDES -->
-          <!-- Tulipán Blanco -->
-          <g id="tulip-w-hd" filter="url(#flowerGlow)">
-            <path d="M 0,0 C -18,-20 -22,-45 0,-55 C 22,-45 18,-20 0,0 Z" fill="url(#tulipWhiteHD)" stroke="#ffffff" stroke-width="1.5"/>
-            <path d="M -12,-5 C -25,-25 -15,-48 0,-55 C 8,-35 2,-18 -12,-5 Z" fill="#ffffff" opacity="0.9" stroke="#cbd5e1" stroke-width="1"/>
-            <path d="M 12,-5 C 25,-25 15,-48 0,-55 C -8,-35 -2,-18 12,-5 Z" fill="#f8fafc" opacity="0.9" stroke="#cbd5e1" stroke-width="1"/>
+          <!-- MOLDE 1: TULIPÁN 3D (Foto 1) -->
+          <g id="tulip-3d" filter="url(#neonGlow)">
+            <!-- Base / Cuerpo exterior -->
+            <path d="M0,0 C-22,-20 -25,-50 0,-65 C25,-50 22,-20 0,0 Z" fill="url(#tulipBody)" stroke="#ffb3c1" stroke-width="2"/>
+            <!-- Pétalo Izquierdo -->
+            <path d="M-15,-8 C-28,-28 -18,-55 0,-65 C6,-40 0,-20 -15,-8 Z" fill="url(#tulipLight)" opacity="0.85" stroke="#ff80ab" stroke-width="1.2"/>
+            <!-- Pétalo Derecho -->
+            <path d="M15,-8 C28,-28 18,-55 0,-65 C-6,-40 0,-20 15,-8 Z" fill="url(#tulipBody)" opacity="0.9" stroke="#ff80ab" stroke-width="1.2"/>
+            <!-- Pétalo Central Brillante -->
+            <path d="M0,-5 C-12,-20 -10,-50 0,-60 C10,-50 12,-20 0,-5 Z" fill="url(#tulipLight)" opacity="0.95" stroke="#ffffff" stroke-width="1.5"/>
+            <!-- Anillo Base -->
+            <ellipse cx="0" cy="-2" rx="6" ry="3" fill="#ff4081"/>
           </g>
 
-          <!-- Tulipán Rosado -->
-          <g id="tulip-p-hd" filter="url(#flowerGlow)">
-            <path d="M 0,0 C -18,-20 -22,-45 0,-55 C 22,-45 18,-20 0,0 Z" fill="url(#tulipPinkHD)" stroke="#ffb2c9" stroke-width="1.5"/>
-            <path d="M -12,-5 C -25,-25 -15,-48 0,-55 C 8,-35 2,-18 -12,-5 Z" fill="#ffdee9" opacity="0.85" stroke="#f472b6" stroke-width="1"/>
-            <path d="M 12,-5 C 25,-25 15,-48 0,-55 C -8,-35 -2,-18 12,-5 Z" fill="#ff758c" opacity="0.85" stroke="#f472b6" stroke-width="1"/>
+          <!-- MOLDE 2: FLOR 5 PÉTALOS (Foto 2) -->
+          <g id="flower-5p" filter="url(#neonGlow)">
+            <!-- 5 Pétalos -->
+            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1"/>
+            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1" transform="rotate(72)"/>
+            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1" transform="rotate(144)"/>
+            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1" transform="rotate(216)"/>
+            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1" transform="rotate(288)"/>
+            <!-- Centro Amarillo Brillante de Foto 2 -->
+            <circle cx="0" cy="-8" r="7" fill="#fff59d" stroke="#ffee58" stroke-width="2"/>
+            <circle cx="0" cy="-8" r="3" fill="#ffffff"/>
           </g>
 
-          <!-- Rosa Blanca -->
-          <g id="rose-w-hd" filter="url(#flowerGlow)">
-            <circle cx="0" cy="-18" r="18" fill="url(#roseWhiteHD)" stroke="#ffffff" stroke-width="1.5"/>
-            <path d="M -12 -24 C -6 -34, 6 -34, 12 -24 C 14 -12, -14 -12, -12 -24 Z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
-            <path d="M -7 -16 C -2 -24, 2 -24, 7 -16 C 9 -9, -9 -9, -7 -16 Z" fill="#ffffff"/>
+          <!-- MOLDE 3: LIRIO ARAÑA REDISEÑADO 3D -->
+          <g id="spider-3d" filter="url(#neonGlow)">
+            <path d="M0,0 Q-20,-20 -35,-15 Q-20,-5 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="1"/>
+            <path d="M0,0 Q20,-20 35,-15 Q20,-5 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="1"/>
+            <path d="M0,0 Q-25,-5 -38,15 Q-20,5 0,0" fill="#d50000" stroke="#ff80ab" stroke-width="1"/>
+            <path d="M0,0 Q25,-5 38,15 Q20,5 0,0" fill="#d50000" stroke="#ff80ab" stroke-width="1"/>
+            <path d="M0,0 Q-12,-32 0,-42 Q12,-32 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="1"/>
+            <!-- Estambres Neón -->
+            <path d="M0,0 Q-28,-35 -40,-30 M0,0 Q28,-35 40,-30 M0,0 Q-15,-45 -18,-50 M0,0 Q15,-45 18,-50" stroke="#ff80ab" stroke-width="2" fill="none"/>
+            <circle cx="-40" cy="-30" r="2.5" fill="#ffeb3b"/>
+            <circle cx="40" cy="-30" r="2.5" fill="#ffeb3b"/>
+            <circle cx="-18" cy="-50" r="2.5" fill="#ffeb3b"/>
+            <circle cx="18" cy="-50" r="2.5" fill="#ffeb3b"/>
           </g>
 
-          <!-- Rosa Rosada -->
-          <g id="rose-p-hd" filter="url(#flowerGlow)">
-            <circle cx="0" cy="-18" r="18" fill="url(#rosePinkHD)" stroke="#fca5a5" stroke-width="1.5"/>
-            <path d="M -12 -24 C -6 -34, 6 -34, 12 -24 C 14 -12, -14 -12, -12 -24 Z" fill="#f43f5e" stroke="#fda4af" stroke-width="1"/>
-            <path d="M -7 -16 C -2 -24, 2 -24, 7 -16 C 9 -9, -9 -9, -7 -16 Z" fill="#fbcfe8"/>
-          </g>
-
-          <!-- Lirio Araña -->
-          <g id="spider-hd" filter="url(#spiderGlow)">
-            <path d="M0,0 Q-18,-18 -30,-12 Q-18,-6 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="0.8"/>
-            <path d="M0,0 Q18,-18 30,-12 Q18,-6 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="0.8"/>
-            <path d="M0,0 Q-22,-6 -34,12 Q-18,6 0,0" fill="#d50000" stroke="#ff80ab" stroke-width="0.8"/>
-            <path d="M0,0 Q22,-6 34,12 Q18,6 0,0" fill="#d50000" stroke="#ff80ab" stroke-width="0.8"/>
-            <path d="M0,0 Q-10,-30 0,-38 Q10,-30 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="0.8"/>
-            <path d="M0,0 Q-24,-32 -36,-28 M0,0 Q24,-32 36,-28 M0,0 Q-12,-40 -15,-44 M0,0 Q12,-40 15,-44 M0,0 Q-30,-14 -40,-10 M0,0 Q30,-14 40,-10" stroke="#ff80ab" stroke-width="1.5" fill="none"/>
-            <circle cx="-36" cy="-28" r="2" fill="#ffeb3b"/>
-            <circle cx="36" cy="-28" r="2" fill="#ffeb3b"/>
-            <circle cx="-15" cy="-44" r="2" fill="#ffeb3b"/>
-            <circle cx="15" cy="-44" r="2" fill="#ffeb3b"/>
-            <circle cx="-40" cy="-10" r="2" fill="#ffeb3b"/>
-            <circle cx="40" cy="-10" r="2" fill="#ffeb3b"/>
+          <!-- MOLDE HOJA -->
+          <g id="leaf">
+            <path d="M0,0 C-15,-10 -20,-30 0,-40 C20,-30 15,-10 0,0 Z" fill="url(#leafGrad)"/>
+            <path d="M0,0 L0,-38" stroke="#81c784" stroke-width="1"/>
           </g>
         </defs>
 
-        <!-- FONDO: LUZ DETRÁS DEL RAMO -->
-        <circle cx="200" cy="220" r="160" fill="#ffb2c9" opacity="0.25" filter="blur(35px)" />
+        <!-- LUZ DE FONDO CÁLIDA -->
+        <circle cx="200" cy="220" r="150" fill="#ff80ab" opacity="0.2" filter="blur(30px)"/>
 
-        <!-- PAPEL COREANO CAPA TRASERA -->
+        <!-- TALLOS Y HOJAS DISTRIBUIDAS (Foto 1) -->
         <g>
-          <path d="M 40 200 L 120 500 L 280 500 L 360 200 L 390 80 L 200 140 L 10 80 Z" fill="url(#koreanPink)" opacity="0.85"/>
-          <path d="M 60 180 L 130 490 L 270 490 L 340 180 L 370 70 L 200 120 L 30 70 Z" fill="url(#koreanWhite)"/>
+          <!-- Tallos principales -->
+          <line x1="200" y1="200" x2="185" y2="430" stroke="url(#stemGrad)" stroke-width="6" stroke-linecap="round"/>
+          <line x1="160" y1="220" x2="190" y2="430" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round"/>
+          <line x1="240" y1="220" x2="200" y2="430" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round"/>
+          <line x1="120" y1="250" x2="180" y2="430" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round"/>
+          <line x1="280" y1="250" x2="210" y2="430" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- Hojas a los lados de los tallos -->
+          <use href="#leaf" x="150" y="320" transform="scale(0.8) rotate(-40)"/>
+          <use href="#leaf" x="250" y="320" transform="scale(0.8) rotate(40)"/>
+          <use href="#leaf" x="170" y="270" transform="scale(0.7) rotate(-30)"/>
+          <use href="#leaf" x="230" y="270" transform="scale(0.7) rotate(30)"/>
+          <use href="#leaf" x="130" y="360" transform="scale(0.9) rotate(-50)"/>
+          <use href="#leaf" x="270" y="360" transform="scale(0.9) rotate(50)"/>
         </g>
 
-        <!-- TALLOS EXTRA -->
-        <g stroke="url(#stemGrad)" stroke-width="3.5" stroke-linecap="round" opacity="0.85">
-          <linearGradient id="stemGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#4caf50"/>
-            <stop offset="100%" stop-color="#1b5e20"/>
-          </linearGradient>
-          <line x1="200" y1="220" x2="175" y2="470"/>
-          <line x1="170" y1="220" x2="190" y2="470"/>
-          <line x1="230" y1="220" x2="210" y2="470"/>
-          <line x1="140" y1="250" x2="185" y2="470"/>
-          <line x1="260" y1="250" x2="205" y2="470"/>
-          <line x1="110" y1="270" x2="180" y2="470"/>
-          <line x1="290" y1="270" x2="215" y2="470"/>
-        </g>
+        <!-- ARREGLO DE FLORES 3D -->
+        <!-- Tulipanes de la Foto 1 -->
+        <use href="#tulip-3d" x="200" y="110" transform="scale(1.1)"/>
+        <use href="#tulip-3d" x="150" y="150"/>
+        <use href="#tulip-3d" x="250" y="150"/>
+        <use href="#tulip-3d" x="200" y="190"/>
+        <use href="#tulip-3d" x="110" y="210" transform="scale(0.95)"/>
+        <use href="#tulip-3d" x="290" y="210" transform="scale(0.95)"/>
 
-        <!-- GRUPO IZQUIERDO -->
-        <g class="sway-left">
-          <use href="#spider-hd" x="80" y="210"/>
-          <use href="#spider-hd" x="120" y="130"/>
-          <use href="#spider-hd" x="60" y="270"/> <!-- Nueva -->
-          <use href="#tulip-p-hd" x="110" y="240" transform="scale(0.95)"/>
-          <use href="#tulip-p-hd" x="80" y="180" transform="scale(0.9)"/> <!-- Nueva -->
-          <use href="#tulip-w-hd" x="130" y="190"/>
-          <use href="#tulip-w-hd" x="100" y="140" transform="scale(0.85)"/> <!-- Nueva -->
-          <use href="#rose-w-hd" x="150" y="240"/>
-          <use href="#rose-p-hd" x="140" y="290"/>
-          <use href="#rose-p-hd" x="100" y="310" transform="scale(0.9)"/> <!-- Nueva -->
-        </g>
+        <!-- Flores 5 Pétalos de la Foto 2 -->
+        <use href="#flower-5p" x="200" y="250" transform="scale(1.2)"/>
+        <use href="#flower-5p" x="150" y="270"/>
+        <use href="#flower-5p" x="250" y="270"/>
+        <use href="#flower-5p" x="110" y="290" transform="scale(0.9)"/>
+        <use href="#flower-5p" x="290" y="290" transform="scale(0.9)"/>
 
-        <!-- GRUPO DERECHO -->
-        <g class="sway-right">
-          <use href="#spider-hd" x="320" y="210"/>
-          <use href="#spider-hd" x="280" y="130"/>
-          <use href="#spider-hd" x="340" y="270"/> <!-- Nueva -->
-          <use href="#tulip-p-hd" x="290" y="240" transform="scale(0.95)"/>
-          <use href="#tulip-p-hd" x="320" y="180" transform="scale(0.9)"/> <!-- Nueva -->
-          <use href="#tulip-w-hd" x="270" y="190"/>
-          <use href="#tulip-w-hd" x="300" y="140" transform="scale(0.85)"/> <!-- Nueva -->
-          <use href="#rose-w-hd" x="250" y="240"/>
-          <use href="#rose-p-hd" x="260" y="290"/>
-          <use href="#rose-p-hd" x="300" y="310" transform="scale(0.9)"/> <!-- Nueva -->
-        </g>
+        <!-- Lirios Araña 3D -->
+        <use href="#spider-3d" x="200" y="60" transform="scale(1.1)"/>
+        <use href="#spider-3d" x="80" y="150"/>
+        <use href="#spider-3d" x="320" y="150"/>
+        <use href="#spider-3d" x="150" y="200" transform="scale(0.9)"/>
+        <use href="#spider-3d" x="250" y="200" transform="scale(0.9)"/>
 
-        <!-- GRUPO CENTRO Y NÚCLEO -->
-        <g class="sway-center">
-          <!-- Lirios Centro -->
-          <use href="#spider-hd" x="200" y="80" transform="scale(1.15)"/>
-          <use href="#spider-hd" x="200" y="280"/>
-          <use href="#spider-hd" x="150" y="100" transform="scale(0.9)"/> <!-- Nueva -->
-          <use href="#spider-hd" x="250" y="100" transform="scale(0.9)"/> <!-- Nueva -->
-
-          <!-- Tulipanes Centro -->
-          <use href="#tulip-w-hd" x="175" y="150"/>
-          <use href="#tulip-w-hd" x="225" y="150"/>
-          <use href="#tulip-w-hd" x="200" y="110" transform="scale(0.95)"/> <!-- Nueva -->
-          <use href="#tulip-p-hd" x="165" y="180"/>
-          <use href="#tulip-p-hd" x="235" y="180"/>
-          <use href="#tulip-p-hd" x="200" y="210"/> <!-- Nueva -->
-
-          <!-- Rosas Centro -->
-          <use href="#rose-w-hd" x="200" y="140"/>
-          <use href="#rose-w-hd" x="160" y="210" transform="scale(0.95)"/> <!-- Nueva -->
-          <use href="#rose-w-hd" x="240" y="210" transform="scale(0.95)"/> <!-- Nueva -->
-          <use href="#rose-p-hd" x="200" y="250" transform="scale(1.1)"/>
-          <use href="#rose-p-hd" x="170" y="270" transform="scale(0.9)"/> <!-- Nueva -->
-          <use href="#rose-p-hd" x="230" y="270" transform="scale(0.9)"/> <!-- Nueva -->
-        </g>
-
-        <!-- PAPEL COREANO ENVOLTURA FRONTAL CON LAZO -->
+        <!-- PAPEL KRAFT / BEIGE ENVOLTURA (Estilo Foto 1) -->
         <g>
-          <path d="M 50 290 L 140 480 Q 200 505 260 480 L 350 290 Q 200 340 50 290 Z" fill="url(#koreanWhite)" opacity="0.96"/>
-          <path d="M 70 310 L 150 480 Q 200 498 250 480 L 330 310 Q 200 350 70 310 Z" fill="url(#koreanPink)" opacity="0.9"/>
+          <!-- Capa interior sombra -->
+          <path d="M 70 300 L 170 470 L 230 470 L 330 300 Z" fill="url(#kraftInner)"/>
+          
+          <!-- Pliegue Izquierdo -->
+          <path d="M 50 280 C 80 340, 120 420, 185 470 L 140 470 C 90 410, 50 340, 30 290 Z" fill="url(#kraftPaper)" stroke="#d4a373" stroke-width="1"/>
+          <path d="M 50 280 L 180 430 Q 200 450 220 430 L 350 280 L 370 310 L 200 480 L 30 310 Z" fill="url(#kraftPaper)" stroke="#e6b894" stroke-width="1.5"/>
 
-          <!-- Lazo Rosado -->
-          <path d="M 165 420 Q 200 410 235 420 Q 215 445 200 432 Q 185 445 165 420 Z" fill="#ff4081" stroke="#ffffff" stroke-width="1"/>
-          <circle cx="200" cy="424" r="7" fill="#f50057"/>
-          <path d="M 195 428 Q 180 465 160 498 L 178 500 Q 198 468 200 428 Z" fill="#ff4081"/>
-          <path d="M 205 428 Q 220 465 240 498 L 222 500 Q 202 468 200 428 Z" fill="#ff4081"/>
+          <!-- Lazo Rosado de Foto 1 -->
+          <path d="M 160 420 Q 200 410 240 420 Q 220 440 200 430 Q 180 440 160 420 Z" fill="#ff80ab" stroke="#ffffff" stroke-width="1"/>
+          <circle cx="200" cy="425" r="6" fill="#ff4081"/>
+          <path d="M 195 428 Q 180 460 160 490 L 175 492 Q 196 462 200 428 Z" fill="#ff80ab"/>
+          <path d="M 205 428 Q 220 460 240 490 L 225 492 Q 204 462 200 428 Z" fill="#ff80ab"/>
         </g>
-
       </svg>
     </div>
   `;
 
   garden.innerHTML = bouquetHTML;
+
+  // Iniciar la animación de Corazones y Círculos Flotantes (Foto 2)
+  startFloatingHearts();
+}
+
+// Lógica de partículas flotantes rodeando el ramo
+function startFloatingHearts() {
+  const container = document.getElementById("garden-container");
+  
+  setInterval(() => {
+    const isHeart = Math.random() > 0.4;
+    const element = document.createElement("div");
+    
+    if (isHeart) {
+      element.className = "floating-heart";
+      element.innerHTML = "💗";
+      element.style.fontSize = (Math.random() * 16 + 12) + "px";
+    } else {
+      element.className = "floating-bubble";
+      element.innerHTML = "⭕";
+      element.style.fontSize = (Math.random() * 14 + 10) + "px";
+      element.style.color = "#ff80ab";
+    }
+
+    // Posición aleatoria horizontal alrededor del ramo
+    element.style.left = (Math.random() * 70 + 15) + "%";
+    element.style.bottom = "10px";
+    
+    // Duración de la subida
+    const duration = Math.random() * 3 + 3.5;
+    element.style.animationDuration = duration + "s";
+
+    container.appendChild(element);
+
+    setTimeout(() => {
+      element.remove();
+    }, duration * 1000);
+  }, 350);
 }
 
 
