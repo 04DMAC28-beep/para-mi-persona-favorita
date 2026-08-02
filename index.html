@@ -120,222 +120,289 @@
         requestAnimationFrame(animateSky);
       }
       animateSky();
-    
-  // Función para generar el Ramo HD 3D estilo Referencia + Corazones Flotantes
-function growGarden() {
-  const garden = document.getElementById("garden-container");
-  garden.innerHTML = "";
+290" y="210" transform="scale(0.95)"/>
 
-  const bouquetHTML = `
-    <div class="bouquet-wrapper">
-      <svg class="bouquet-svg" viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <!-- Filtro Neón Luminous -->
-          <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feComponentTransfer in="blur" result="glow">
-              <feFuncA type="linear" slope="1.8"/>
-            </feComponentTransfer>
-            <feMerge>
-              <feMergeNode in="glow"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-
-          <!-- Gradiente Papel Kraft (Estilo Foto 1) -->
-          <linearGradient id="kraftPaper" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#f5d6ba"/>
-            <stop offset="50%" stop-color="#e6b894"/>
-            <stop offset="100%" stop-color="#c8966b"/>
-          </linearGradient>
-          
-          <linearGradient id="kraftInner" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#d4a373"/>
-            <stop offset="100%" stop-color="#a37248"/>
-          </linearGradient>
-
-          <!-- Gradientes Tallo e Hojas -->
-          <linearGradient id="stemGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#2e7d32"/>
-            <stop offset="50%" stop-color="#4caf50"/>
-            <stop offset="100%" stop-color="#1b5e20"/>
-          </linearGradient>
-
-          <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#66bb6a"/>
-            <stop offset="100%" stop-color="#1b5e20"/>
-          </linearGradient>
-
-          <!-- Gradiente Tulipán 3D (Foto 1) -->
-          <radialGradient id="tulipBody" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stop-color="#ff9ebb"/>
-            <stop offset="65%" stop-color="#ff2a75"/>
-            <stop offset="100%" stop-color="#b70043"/>
-          </radialGradient>
-          
-          <radialGradient id="tulipLight" cx="50%" cy="20%" r="50%">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="100%" stop-color="#ff80ab"/>
-          </radialGradient>
-
-          <!-- Gradiente Flor 5 Pétalos (Foto 2) -->
-          <radialGradient id="petal5Grad" cx="50%" cy="30%" r="70%">
-            <stop offset="0%" stop-color="#ffccd5"/>
-            <stop offset="60%" stop-color="#ff758f"/>
-            <stop offset="100%" stop-color="#c9184a"/>
-          </radialGradient>
-
-          <!-- MOLDE 1: TULIPÁN 3D (Foto 1) -->
-          <g id="tulip-3d" filter="url(#neonGlow)">
-            <!-- Base / Cuerpo exterior -->
-            <path d="M0,0 C-22,-20 -25,-50 0,-65 C25,-50 22,-20 0,0 Z" fill="url(#tulipBody)" stroke="#ffb3c1" stroke-width="2"/>
-            <!-- Pétalo Izquierdo -->
-            <path d="M-15,-8 C-28,-28 -18,-55 0,-65 C6,-40 0,-20 -15,-8 Z" fill="url(#tulipLight)" opacity="0.85" stroke="#ff80ab" stroke-width="1.2"/>
-            <!-- Pétalo Derecho -->
-            <path d="M15,-8 C28,-28 18,-55 0,-65 C-6,-40 0,-20 15,-8 Z" fill="url(#tulipBody)" opacity="0.9" stroke="#ff80ab" stroke-width="1.2"/>
-            <!-- Pétalo Central Brillante -->
-            <path d="M0,-5 C-12,-20 -10,-50 0,-60 C10,-50 12,-20 0,-5 Z" fill="url(#tulipLight)" opacity="0.95" stroke="#ffffff" stroke-width="1.5"/>
-            <!-- Anillo Base -->
-            <ellipse cx="0" cy="-2" rx="6" ry="3" fill="#ff4081"/>
-          </g>
-
-          <!-- MOLDE 2: FLOR 5 PÉTALOS (Foto 2) -->
-          <g id="flower-5p" filter="url(#neonGlow)">
-            <!-- 5 Pétalos -->
-            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1"/>
-            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1" transform="rotate(72)"/>
-            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1" transform="rotate(144)"/>
-            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1" transform="rotate(216)"/>
-            <path d="M0,-8 C-12,-25 -5,-38 0,-40 C5,-38 12,-25 0,-8 Z" fill="url(#petal5Grad)" stroke="#ffb3c1" stroke-width="1" transform="rotate(288)"/>
-            <!-- Centro Amarillo Brillante de Foto 2 -->
-            <circle cx="0" cy="-8" r="7" fill="#fff59d" stroke="#ffee58" stroke-width="2"/>
-            <circle cx="0" cy="-8" r="3" fill="#ffffff"/>
-          </g>
-
-          <!-- MOLDE 3: LIRIO ARAÑA REDISEÑADO 3D -->
-          <g id="spider-3d" filter="url(#neonGlow)">
-            <path d="M0,0 Q-20,-20 -35,-15 Q-20,-5 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="1"/>
-            <path d="M0,0 Q20,-20 35,-15 Q20,-5 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="1"/>
-            <path d="M0,0 Q-25,-5 -38,15 Q-20,5 0,0" fill="#d50000" stroke="#ff80ab" stroke-width="1"/>
-            <path d="M0,0 Q25,-5 38,15 Q20,5 0,0" fill="#d50000" stroke="#ff80ab" stroke-width="1"/>
-            <path d="M0,0 Q-12,-32 0,-42 Q12,-32 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="1"/>
-            <!-- Estambres Neón -->
-            <path d="M0,0 Q-28,-35 -40,-30 M0,0 Q28,-35 40,-30 M0,0 Q-15,-45 -18,-50 M0,0 Q15,-45 18,-50" stroke="#ff80ab" stroke-width="2" fill="none"/>
-            <circle cx="-40" cy="-30" r="2.5" fill="#ffeb3b"/>
-            <circle cx="40" cy="-30" r="2.5" fill="#ffeb3b"/>
-            <circle cx="-18" cy="-50" r="2.5" fill="#ffeb3b"/>
-            <circle cx="18" cy="-50" r="2.5" fill="#ffeb3b"/>
-          </g>
-
-          <!-- MOLDE HOJA -->
-          <g id="leaf">
-            <path d="M0,0 C-15,-10 -20,-30 0,-40 C20,-30 15,-10 0,0 Z" fill="url(#leafGrad)"/>
-            <path d="M0,0 L0,-38" stroke="#81c784" stroke-width="1"/>
-          </g>
-        </defs>
-
-        <!-- LUZ DE FONDO CÁLIDA -->
-        <circle cx="200" cy="220" r="150" fill="#ff80ab" opacity="0.2" filter="blur(30px)"/>
-
-        <!-- TALLOS Y HOJAS DISTRIBUIDAS (Foto 1) -->
-        <g>
-          <!-- Tallos principales -->
-          <line x1="200" y1="200" x2="185" y2="430" stroke="url(#stemGrad)" stroke-width="6" stroke-linecap="round"/>
-          <line x1="160" y1="220" x2="190" y2="430" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round"/>
-          <line x1="240" y1="220" x2="200" y2="430" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round"/>
-          <line x1="120" y1="250" x2="180" y2="430" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round"/>
-          <line x1="280" y1="250" x2="210" y2="430" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round"/>
-
-          <!-- Hojas a los lados de los tallos -->
-          <use href="#leaf" x="150" y="320" transform="scale(0.8) rotate(-40)"/>
-          <use href="#leaf" x="250" y="320" transform="scale(0.8) rotate(40)"/>
-          <use href="#leaf" x="170" y="270" transform="scale(0.7) rotate(-30)"/>
-          <use href="#leaf" x="230" y="270" transform="scale(0.7) rotate(30)"/>
-          <use href="#leaf" x="130" y="360" transform="scale(0.9) rotate(-50)"/>
-          <use href="#leaf" x="270" y="360" transform="scale(0.9) rotate(50)"/>
-        </g>
-
-        <!-- ARREGLO DE FLORES 3D -->
-        <!-- Tulipanes de la Foto 1 -->
-        <use href="#tulip-3d" x="200" y="110" transform="scale(1.1)"/>
-        <use href="#tulip-3d" x="150" y="150"/>
-        <use href="#tulip-3d" x="250" y="150"/>
-        <use href="#tulip-3d" x="200" y="190"/>
-        <use href="#tulip-3d" x="110" y="210" transform="scale(0.95)"/>
-        <use href="#tulip-3d" x="290" y="210" transform="scale(0.95)"/>
-
-        <!-- Flores 5 Pétalos de la Foto 2 -->
-        <use href="#flower-5p" x="200" y="250" transform="scale(1.2)"/>
-        <use href="#flower-5p" x="150" y="270"/>
-        <use href="#flower-5p" x="250" y="270"/>
-        <use href="#flower-5p" x="110" y="290" transform="scale(0.9)"/>
-        <use href="#flower-5p" x="290" y="290" transform="scale(0.9)"/>
-
-        <!-- Lirios Araña 3D -->
-        <use href="#spider-3d" x="200" y="60" transform="scale(1.1)"/>
-        <use href="#spider-3d" x="80" y="150"/>
-        <use href="#spider-3d" x="320" y="150"/>
-        <use href="#spider-3d" x="150" y="200" transform="scale(0.9)"/>
-        <use href="#spider-3d" x="250" y="200" transform="scale(0.9)"/>
-
-        <!-- PAPEL KRAFT / BEIGE ENVOLTURA (Estilo Foto 1) -->
-        <g>
-          <!-- Capa interior sombra -->
-          <path d="M 70 300 L 170 470 L 230 470 L 330 300 Z" fill="url(#kraftInner)"/>
-          
-          <!-- Pliegue Izquierdo -->
-          <path d="M 50 280 C 80 340, 120 420, 185 470 L 140 470 C 90 410, 50 340, 30 290 Z" fill="url(#kraftPaper)" stroke="#d4a373" stroke-width="1"/>
-          <path d="M 50 280 L 180 430 Q 200 450 220 430 L 350 280 L 370 310 L 200 480 L 30 310 Z" fill="url(#kraftPaper)" stroke="#e6b894" stroke-width="1.5"/>
-
-          <!-- Lazo Rosado de Foto 1 -->
-          <path d="M 160 420 Q 200 410 240 420 Q 220 440 200 430 Q 180 440 160 420 Z" fill="#ff80ab" stroke="#ffffff" stroke-width="1"/>
-          <circle cx="200" cy="425" r="6" fill="#ff4081"/>
-          <path d="M 195 428 Q 180 460 160 490 L 175 492 Q 196 462 200 428 Z" fill="#ff80ab"/>
-          <path d="M 205 428 Q 220 460 240 490 L 225 492 Q 204 462 200 428 Z" fill="#ff80ab"/>
-        </g>
-      </svg>
-    </div>
-  `;
-
-  garden.innerHTML = bouquetHTML;
-
-  // Iniciar la animación de Corazones y Círculos Flotantes (Foto 2)
-  startFloatingHearts();
-}
-
-// Lógica de partículas flotantes rodeando el ramo
-function startFloatingHearts() {
+      function growGarden() {
   const container = document.getElementById("garden-container");
-  
-  setInterval(() => {
-    const isHeart = Math.random() > 0.4;
-    const element = document.createElement("div");
-    
-    if (isHeart) {
-      element.className = "floating-heart";
-      element.innerHTML = "💗";
-      element.style.fontSize = (Math.random() * 16 + 12) + "px";
-    } else {
-      element.className = "floating-bubble";
-      element.innerHTML = "⭕";
-      element.style.fontSize = (Math.random() * 14 + 10) + "px";
-      element.style.color = "#ff80ab";
+  container.innerHTML = `<canvas id="flowerCanvas" width="480" height="520"></canvas>`;
+
+  const canvas = document.getElementById("flowerCanvas");
+  const ctx = canvas.getContext("2d");
+
+  let progress = 0; // Controla la animación de crecimiento (0 a 1)
+
+  // Configuración de las flores que componen el ramo/jardín
+  const flowers = [
+    // Lirios Araña (Arriba y extremos)
+    { type: 'spider', x: 240, maxY: 110, scale: 1.1 },
+    { type: 'spider', x: 140, maxY: 170, scale: 0.9 },
+    { type: 'spider', x: 340, maxY: 170, scale: 0.9 },
+
+    // Tulipanes 3D (Cuerpo medio-alto)
+    { type: 'tulip',  x: 190, maxY: 190, scale: 1.0 },
+    { type: 'tulip',  x: 290, maxY: 190, scale: 1.0 },
+    { type: 'tulip',  x: 240, maxY: 240, scale: 1.1 },
+
+    // Flores de 5 Pétalos de la referencia (Base)
+    { type: 'petal5', x: 150, maxY: 300, scale: 1.0 },
+    { type: 'petal5', x: 330, maxY: 300, scale: 1.0 },
+    { type: 'petal5', x: 240, maxY: 340, scale: 1.25 }
+  ];
+
+  // Partículas y Corazones Flotantes (En bucle como en el video)
+  const particles = Array.from({ length: 30 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 14 + 8,
+    speed: Math.random() * 1.5 + 0.6,
+    isHeart: Math.random() > 0.35,
+    opacity: Math.random() * 0.7 + 0.3
+  }));
+
+  // Dibuja un tallo con curvas Bezier y efecto Neón
+  function drawStem(startX, startY, endX, endY, p) {
+    const curY = startY - (startY - endY) * p;
+    const midX = (startX + endX) / 2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.quadraticCurveTo(midX, (startY + curY) / 2, endX, curY);
+    ctx.strokeStyle = "#388e3c";
+    ctx.lineWidth = 5;
+    ctx.lineCap = "round";
+    ctx.shadowColor = "#81c784";
+    ctx.shadowBlur = 12;
+    ctx.stroke();
+
+    // Dibujar hojas a lo largo del tallo progresivamente
+    if (p > 0.4) {
+      const leafScale = Math.min((p - 0.4) * 2, 1);
+      drawLeaf((startX + endX) / 2 - 15, (startY + curY) / 2, -0.6, leafScale);
+      drawLeaf((startX + endX) / 2 + 15, (startY + curY) / 2, 0.6, leafScale);
+    }
+    ctx.restore();
+  }
+
+  // Dibujar Hoja Verde con gradiente
+  function drawLeaf(x, y, angle, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.scale(scale, scale);
+
+    const grad = ctx.createLinearGradient(0, 0, 0, -30);
+    grad.addColorStop(0, "#1b5e20");
+    grad.addColorStop(1, "#66bb6a");
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.quadraticCurveTo(-15, -15, 0, -30);
+    ctx.quadraticCurveTo(15, -15, 0, 0);
+    ctx.fillStyle = grad;
+    ctx.shadowColor = "#a7f3d0";
+    ctx.shadowBlur = 8;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // DIBUJO 1: TULIPÁN 3D EN CANVAS
+  function drawTulip(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    const gradBody = ctx.createRadialGradient(0, -20, 5, 0, -20, 30);
+    gradBody.addColorStop(0, "#ffb3c1");
+    gradBody.addColorStop(0.6, "#ff2a75");
+    gradBody.addColorStop(1, "#a00037");
+
+    // Resplandor Neón
+    ctx.shadowColor = "#ff4081";
+    ctx.shadowBlur = 18;
+
+    // Pétalo Trasero
+    ctx.beginPath();
+    ctx.ellipse(0, -25, 22, 32, 0, 0, Math.PI * 2);
+    ctx.fillStyle = gradBody;
+    ctx.fill();
+
+    // Pétalo Izquierdo
+    ctx.beginPath();
+    ctx.ellipse(-10, -20, 15, 28, -0.2, 0, Math.PI * 2);
+    ctx.fillStyle = "#ff758f";
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Pétalo Derecho
+    ctx.beginPath();
+    ctx.ellipse(10, -20, 15, 28, 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = "#ff4d6d";
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Pétalo Centro Frontal Brillante
+    const gradCenter = ctx.createLinearGradient(0, -40, 0, 0);
+    gradCenter.addColorStop(0, "#ffffff");
+    gradCenter.addColorStop(1, "#ff80ab");
+
+    ctx.beginPath();
+    ctx.ellipse(0, -18, 12, 24, 0, 0, Math.PI * 2);
+    ctx.fillStyle = gradCenter;
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // DIBUJO 2: FLOR 5 PÉTALOS DE LA REFERENCIA
+  function drawPetal5(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    ctx.shadowColor = "#ff2a75";
+    ctx.shadowBlur = 16;
+
+    const petalGrad = ctx.createRadialGradient(0, -18, 2, 0, -18, 20);
+    petalGrad.addColorStop(0, "#ffccd5");
+    petalGrad.addColorStop(0.7, "#ff4d6d");
+    petalGrad.addColorStop(1, "#c9184a");
+
+    for (let i = 0; i < 5; i++) {
+      ctx.beginPath();
+      ctx.rotate((Math.PI * 2) / 5);
+      ctx.ellipse(0, -20, 13, 24, 0, 0, Math.PI * 2);
+      ctx.fillStyle = petalGrad;
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
     }
 
-    // Posición aleatoria horizontal alrededor del ramo
-    element.style.left = (Math.random() * 70 + 15) + "%";
-    element.style.bottom = "10px";
-    
-    // Duración de la subida
-    const duration = Math.random() * 3 + 3.5;
-    element.style.animationDuration = duration + "s";
+    // Botón Centro Amarillo Brillante
+    ctx.beginPath();
+    ctx.arc(0, 0, 9, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffeb3b";
+    ctx.shadowColor = "#ffff00";
+    ctx.shadowBlur = 20;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(0, 0, 4, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
 
-    container.appendChild(element);
+    ctx.restore();
+  }
 
-    setTimeout(() => {
-      element.remove();
-    }, duration * 1000);
-  }, 350);
+  // DIBUJO 3: LIRIO ARAÑA ROJO NEÓN
+  function drawSpiderLily(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    ctx.shadowColor = "#ff1744";
+    ctx.shadowBlur = 20;
+
+    // Pétalos finos estilizados en abanico
+    const angles = [-0.8, -0.4, 0, 0.4, 0.8, 2.2, 2.6, 3.0, 3.4];
+    angles.forEach((ang) => {
+      ctx.save();
+      ctx.rotate(ang);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(-12, -25, 0, -40);
+      ctx.quadraticCurveTo(12, -25, 0, 0);
+      ctx.fillStyle = "#ff1744";
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // Estambres curvados con puntas brillantes
+    const stamens = [-1.0, -0.5, 0, 0.5, 1.0];
+    stamens.forEach((st) => {
+      ctx.save();
+      ctx.rotate(st);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(-15, -35, -22, -48);
+      ctx.strokeStyle = "#ff80ab";
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(-22, -48, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffeb3b";
+      ctx.shadowColor = "#ffff80";
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    ctx.restore();
+  }
+
+  // DIBUJAR PARTÍCULAS / CORAZONES FLOTANTES
+  function drawParticles() {
+    particles.forEach((p) => {
+      p.y -= p.speed;
+      if (p.y < -20) p.y = canvas.height + 20;
+
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      if (p.isHeart) {
+        ctx.font = `${p.size}px sans-serif`;
+        ctx.fillText("💗", p.x, p.y);
+      } else {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+        ctx.strokeStyle = "#ff80ab";
+        ctx.lineWidth = 2;
+        ctx.shadowColor = "#ff4081";
+        ctx.shadowBlur = 12;
+        ctx.stroke();
+      }
+      ctx.restore();
+    });
+  }
+
+  // BUCLE PRINCIPAL DE ANIMACIÓN
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 1. Fondo de Partículas en bucle continuo
+    drawParticles();
+
+    // 2. Incrementar barra de tiempo/crecimiento
+    if (progress < 1) {
+      progress += 0.009;
+    }
+
+    // 3. Dibujar cada planta (Tallo + Flor correspondiente)
+    flowers.forEach((f) => {
+      drawStem(240, 510, f.x, f.maxY, progress);
+
+      // Florece gradualmente al llegar a su altura
+      if (progress > 0.5) {
+        const flowerProgress = Math.min((progress - 0.5) * 2, 1);
+        const currentScale = f.scale * flowerProgress;
+
+        if (f.type === 'tulip') drawTulip(f.x, f.maxY, currentScale);
+        if (f.type === 'petal5') drawPetal5(f.x, f.maxY, currentScale);
+        if (f.type === 'spider') drawSpiderLily(f.x, f.maxY, currentScale);
+      }
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 }
 
 
