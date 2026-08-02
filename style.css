@@ -23,6 +23,25 @@ body {
   pointer-events: none;
 }
 
+/* --- CONTENEDOR DE JARDÍN ANIMADO EN CANVAS --- */
+#garden-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 520px;
+  position: relative;
+  background: transparent;
+  overflow: hidden;
+}
+
+#flowerCanvas {
+  width: 100%;
+  max-width: 480px;
+  height: 520px;
+}
+
+
 /* Pantalla Hero / Inicio */
 .hero-screen {
   position: fixed;
