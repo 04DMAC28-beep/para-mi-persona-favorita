@@ -1,348 +1,442 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jardín Animado ✨</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Ti ❤️</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
+  <!-- Música de fondo -->
+  <audio id="bg-music" src="musica.mp3" loop preload="auto"></audio>
+
+  <!-- Canvas para el fondo estrellado -->
   <canvas id="sky-canvas"></canvas>
 
-  <main>
-    <header id="celebration-message">
-      <h2>Gracias 🥰</h2>
-      <h1>TE AMO MUCHO MI AMOR 💗🫶</h1>
-    </header>
+  <!-- PANTALLA DE INICIO -->
+  <section id="hero" class="hero-screen">
+    <div class="hero-content">
+      <h1 class="sparkle-title">🌅 Un Regalo Especial</h1>
+      <p>Haz clic para descubrir lo que guardo para ti</p>
+      <button id="start-btn" class="glow-btn">Ábrelo ❤️</button>
+    </div>
+  </section>
 
-    <button id="heartBtn" class="action-btn" onclick="window.growGarden()">
-      Ver Jardín de Flores 🌸
-    </button>
-
+  <!-- ESCENA PRINCIPAL -->
+  <main id="main-scene" class="hidden">
+    
+    <!-- 1. Jardín de Tulipanes -->
     <div id="garden-container"></div>
+
+    <!-- 2. Carta con efecto Máquina de Escribir -->
+    <div id="typewriter-container" class="message-card hidden-element">
+      <p id="typewriter-text"></p>
+    </div>
+
+    <!-- 3. Galería Polaroid -->
+    <section id="photos-section" class="gallery-section hidden-element">
+      <div class="polaroid-grid">
+        <div class="polaroid">
+          <img src="foto1.jpg" alt="Foto 1">
+          <p>Nuestros primeros momentos ✨</p>
+        </div>
+        <div class="polaroid">
+          <img src="foto2.jpg" alt="Foto 2">
+          <p>Risas inolvidables 💖</p>
+        </div>
+        <div class="polaroid">
+          <img src="foto3.jpg" alt="Foto 3">
+          <p>Siempre tú 🌷</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Corazón Interactivo -->
+    <div id="heart-section" class="interactive-heart-container hidden-element">
+      <button id="heart-btn" class="pulse-heart">❤️</button>
+      <p class="heart-hint">Tócame para una sorpresa</p>
+    </div>
+
+    <!-- 5. Propuesta y Cierre -->
+    <footer id="final-section" class="final-message hidden-element">
+      <p class="question-text">"Sería tan afortunado de tenerte siempre a mi lado" 🌷❤️</p>
+      
+      <div id="proposal-buttons" class="proposal-container">
+        <button id="accept-btn" class="choice-btn accept">Aceptar 🥺</button>
+        <button id="reject-btn" class="choice-btn reject">Rechazar 😞</button>
+      </div>
+
+      <div id="celebration-message" class="celebration hidden-element">
+        <h2>Gracias 🥰</h2>
+        <h1>TE AMO MUCHO MI AMOR 💗🫶</h1>
+      </div>
+    </footer>
+
   </main>
 
   <script>
-    // --- 1. CONFIGURACIÓN DEL CIELO CON ESTRELLAS DE FONDO ---
-    (function initSky() {
-      const canvas = document.getElementById("sky-canvas");
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
+    window.addEventListener("load", () => {
+      const startBtn = document.getElementById("start-btn");
+      const hero = document.getElementById("hero");
+      const mainScene = document.getElementById("main-scene");
+      const bgMusic = document.getElementById("bg-music");
+      const heartBtn = document.getElementById("heart-btn");
 
-      function resizeSky() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+      const typewriterElement = document.getElementById("typewriter-text");
+      const messageText = "Estas flores jamás podrán compararse con lo hermosa que eres, pero quería regalarte un pequeño jardín que florezca cada vez que pienses en nosotros. ❤️";
+
+      // Canvas y Estrellas
+      const canvas = document.getElementById("sky-canvas");
+      const ctx = canvas.getContext("2d");
+      let width, height;
+
+      function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
       }
-      resizeSky();
-      window.addEventListener("resize", resizeSky);
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
 
       const stars = Array.from({ length: 90 }, () => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        radius: Math.random() * 1.5 + 0.5,
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 2,
         alpha: Math.random(),
-        speed: Math.random() * 0.02 + 0.005
+        speed: Math.random() * 0.02
       }));
 
-      function drawSky() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        stars.forEach(s => {
-          s.alpha += s.speed;
-          if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+      function animateSky() {
+        ctx.clearRect(0, 0, width, height);
+        stars.forEach(star => {
+          star.alpha += star.speed;
+          if (star.alpha > 1 || star.alpha < 0) star.speed = -star.speed;
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
           ctx.beginPath();
-          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(s.alpha)})`;
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
           ctx.fill();
         });
-        requestAnimationFrame(drawSky);
+        requestAnimationFrame(animateSky);
       }
-      drawSky();
-    })();
+      animateSky();
 
-    // --- 2. FUNCIÓN GLOBAL DE CRECIMIENTO DEL JARDÍN ---
-    window.growGarden = function() {
-      const container = document.getElementById("garden-container");
-      if (!container) return;
+// Función para generar el Ramo Extragrande con más flores
+function growGarden() {
+  const garden = document.getElementById("garden-container");
+  garden.innerHTML = "";
 
-      // Inserción limpia del canvas del jardín
-      container.innerHTML = `<canvas id="flowerCanvas" width="480" height="520"></canvas>`;
-      const canvas = document.getElementById("flowerCanvas");
-      const ctx = canvas.getContext("2d");
+  const bouquetHTML = `
+    <div class="bouquet-wrapper" style="width: 380px; height: 480px;">
+      <svg class="bouquet-svg" viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Filtro de Resplandor Neón -->
+          <filter id="flowerGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
 
-      let progress = 0; // Progreso de crecimiento de 0 a 1
+          <filter id="spiderGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#ff1744" flood-opacity="0.8"/>
+          </filter>
 
-      // Configuración de Flores (Tulipanes, 5-Pétalos y Lirios Araña)
-      const flowers = [
-        // Lirios Araña Neón (Nivel Superior)
-        { type: 'spider', x: 240, maxY: 100, scale: 1.1 },
-        { type: 'spider', x: 140, maxY: 160, scale: 0.9 },
-        { type: 'spider', x: 340, maxY: 160, scale: 0.9 },
+          <!-- Gradientes Papel Coreano -->
+          <linearGradient id="koreanPink" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fbcfe8" stop-opacity="0.95"/>
+            <stop offset="50%" stop-color="#f472b6" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#db2777" stop-opacity="0.85"/>
+          </linearGradient>
+          <linearGradient id="koreanWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
+            <stop offset="100%" stop-color="#f1f5f9" stop-opacity="0.9"/>
+          </linearGradient>
 
-        // Tulipanes 3D Gradiente (Nivel Medio)
-        { type: 'tulip',  x: 185, maxY: 200, scale: 1.0 },
-        { type: 'tulip',  x: 295, maxY: 200, scale: 1.0 },
-        { type: 'tulip',  x: 240, maxY: 245, scale: 1.15 },
+          <!-- Gradientes Flores -->
+          <radialGradient id="tulipWhiteHD" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="65%" stop-color="#f1f5f9"/>
+            <stop offset="100%" stop-color="#cbd5e1"/>
+          </radialGradient>
+          <radialGradient id="tulipPinkHD" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#ffdee9"/>
+            <stop offset="55%" stop-color="#ff758c"/>
+            <stop offset="100%" stop-color="#d81b60"/>
+          </radialGradient>
 
-        // Flores Rosas 5 Pétalos con Centro Amarillo (Nivel Base)
-        { type: 'petal5', x: 150, maxY: 305, scale: 1.0 },
-        { type: 'petal5', x: 330, maxY: 305, scale: 1.0 },
-        { type: 'petal5', x: 240, maxY: 350, scale: 1.25 }
-      ];
+          <radialGradient id="roseWhiteHD" cx="40%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="70%" stop-color="#e2e8f0"/>
+            <stop offset="100%" stop-color="#94a3b8"/>
+          </radialGradient>
+          <radialGradient id="rosePinkHD" cx="40%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#fbcfe8"/>
+            <stop offset="60%" stop-color="#f43f5e"/>
+            <stop offset="100%" stop-color="#be123c"/>
+          </radialGradient>
 
-      // Partículas y Corazones Flotantes en Bucle
-      const particles = Array.from({ length: 32 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 14 + 8,
-        speed: Math.random() * 1.4 + 0.6,
-        isHeart: Math.random() > 0.35,
-        opacity: Math.random() * 0.7 + 0.3
-      }));
+          <!-- MOLDES -->
+          <!-- Tulipán Blanco -->
+          <g id="tulip-w-hd" filter="url(#flowerGlow)">
+            <path d="M 0,0 C -18,-20 -22,-45 0,-55 C 22,-45 18,-20 0,0 Z" fill="url(#tulipWhiteHD)" stroke="#ffffff" stroke-width="1.5"/>
+            <path d="M -12,-5 C -25,-25 -15,-48 0,-55 C 8,-35 2,-18 -12,-5 Z" fill="#ffffff" opacity="0.9" stroke="#cbd5e1" stroke-width="1"/>
+            <path d="M 12,-5 C 25,-25 15,-48 0,-55 C -8,-35 -2,-18 12,-5 Z" fill="#f8fafc" opacity="0.9" stroke="#cbd5e1" stroke-width="1"/>
+          </g>
 
-      // DIBUJAR TALLOS CON HOJAS
-      function drawStem(startX, startY, endX, endY, p) {
-        const curY = startY - (startY - endY) * p;
-        const midX = (startX + endX) / 2;
+          <!-- Tulipán Rosado -->
+          <g id="tulip-p-hd" filter="url(#flowerGlow)">
+            <path d="M 0,0 C -18,-20 -22,-45 0,-55 C 22,-45 18,-20 0,0 Z" fill="url(#tulipPinkHD)" stroke="#ffb2c9" stroke-width="1.5"/>
+            <path d="M -12,-5 C -25,-25 -15,-48 0,-55 C 8,-35 2,-18 -12,-5 Z" fill="#ffdee9" opacity="0.85" stroke="#f472b6" stroke-width="1"/>
+            <path d="M 12,-5 C 25,-25 15,-48 0,-55 C -8,-35 -2,-18 12,-5 Z" fill="#ff758c" opacity="0.85" stroke="#f472b6" stroke-width="1"/>
+          </g>
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.quadraticCurveTo(midX, (startY + curY) / 2, endX, curY);
-        ctx.strokeStyle = "#2e7d32";
-        ctx.lineWidth = 5;
-        ctx.lineCap = "round";
-        ctx.shadowColor = "#81c784";
-        ctx.shadowBlur = 12;
-        ctx.stroke();
+          <!-- Rosa Blanca -->
+          <g id="rose-w-hd" filter="url(#flowerGlow)">
+            <circle cx="0" cy="-18" r="18" fill="url(#roseWhiteHD)" stroke="#ffffff" stroke-width="1.5"/>
+            <path d="M -12 -24 C -6 -34, 6 -34, 12 -24 C 14 -12, -14 -12, -12 -24 Z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+            <path d="M -7 -16 C -2 -24, 2 -24, 7 -16 C 9 -9, -9 -9, -7 -16 Z" fill="#ffffff"/>
+          </g>
 
-        // Salida de hojas progresivas
-        if (p > 0.4) {
-          const leafScale = Math.min((p - 0.4) * 2, 1);
-          drawLeaf((startX + endX) / 2 - 14, (startY + curY) / 2, -0.6, leafScale);
-          drawLeaf((startX + endX) / 2 + 14, (startY + curY) / 2, 0.6, leafScale);
+          <!-- Rosa Rosada -->
+          <g id="rose-p-hd" filter="url(#flowerGlow)">
+            <circle cx="0" cy="-18" r="18" fill="url(#rosePinkHD)" stroke="#fca5a5" stroke-width="1.5"/>
+            <path d="M -12 -24 C -6 -34, 6 -34, 12 -24 C 14 -12, -14 -12, -12 -24 Z" fill="#f43f5e" stroke="#fda4af" stroke-width="1"/>
+            <path d="M -7 -16 C -2 -24, 2 -24, 7 -16 C 9 -9, -9 -9, -7 -16 Z" fill="#fbcfe8"/>
+          </g>
+
+          <!-- Lirio Araña -->
+          <g id="spider-hd" filter="url(#spiderGlow)">
+            <path d="M0,0 Q-18,-18 -30,-12 Q-18,-6 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="0.8"/>
+            <path d="M0,0 Q18,-18 30,-12 Q18,-6 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="0.8"/>
+            <path d="M0,0 Q-22,-6 -34,12 Q-18,6 0,0" fill="#d50000" stroke="#ff80ab" stroke-width="0.8"/>
+            <path d="M0,0 Q22,-6 34,12 Q18,6 0,0" fill="#d50000" stroke="#ff80ab" stroke-width="0.8"/>
+            <path d="M0,0 Q-10,-30 0,-38 Q10,-30 0,0" fill="#ff1744" stroke="#ffffff" stroke-width="0.8"/>
+            <path d="M0,0 Q-24,-32 -36,-28 M0,0 Q24,-32 36,-28 M0,0 Q-12,-40 -15,-44 M0,0 Q12,-40 15,-44 M0,0 Q-30,-14 -40,-10 M0,0 Q30,-14 40,-10" stroke="#ff80ab" stroke-width="1.5" fill="none"/>
+            <circle cx="-36" cy="-28" r="2" fill="#ffeb3b"/>
+            <circle cx="36" cy="-28" r="2" fill="#ffeb3b"/>
+            <circle cx="-15" cy="-44" r="2" fill="#ffeb3b"/>
+            <circle cx="15" cy="-44" r="2" fill="#ffeb3b"/>
+            <circle cx="-40" cy="-10" r="2" fill="#ffeb3b"/>
+            <circle cx="40" cy="-10" r="2" fill="#ffeb3b"/>
+          </g>
+        </defs>
+
+        <!-- FONDO: LUZ DETRÁS DEL RAMO -->
+        <circle cx="200" cy="220" r="160" fill="#ffb2c9" opacity="0.25" filter="blur(35px)" />
+
+        <!-- PAPEL COREANO CAPA TRASERA -->
+        <g>
+          <path d="M 40 200 L 120 500 L 280 500 L 360 200 L 390 80 L 200 140 L 10 80 Z" fill="url(#koreanPink)" opacity="0.85"/>
+          <path d="M 60 180 L 130 490 L 270 490 L 340 180 L 370 70 L 200 120 L 30 70 Z" fill="url(#koreanWhite)"/>
+        </g>
+
+        <!-- TALLOS EXTRA -->
+        <g stroke="url(#stemGrad)" stroke-width="3.5" stroke-linecap="round" opacity="0.85">
+          <linearGradient id="stemGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#4caf50"/>
+            <stop offset="100%" stop-color="#1b5e20"/>
+          </linearGradient>
+          <line x1="200" y1="220" x2="175" y2="470"/>
+          <line x1="170" y1="220" x2="190" y2="470"/>
+          <line x1="230" y1="220" x2="210" y2="470"/>
+          <line x1="140" y1="250" x2="185" y2="470"/>
+          <line x1="260" y1="250" x2="205" y2="470"/>
+          <line x1="110" y1="270" x2="180" y2="470"/>
+          <line x1="290" y1="270" x2="215" y2="470"/>
+        </g>
+
+        <!-- GRUPO IZQUIERDO -->
+        <g class="sway-left">
+          <use href="#spider-hd" x="80" y="210"/>
+          <use href="#spider-hd" x="120" y="130"/>
+          <use href="#spider-hd" x="60" y="270"/> <!-- Nueva -->
+          <use href="#tulip-p-hd" x="110" y="240" transform="scale(0.95)"/>
+          <use href="#tulip-p-hd" x="80" y="180" transform="scale(0.9)"/> <!-- Nueva -->
+          <use href="#tulip-w-hd" x="130" y="190"/>
+          <use href="#tulip-w-hd" x="100" y="140" transform="scale(0.85)"/> <!-- Nueva -->
+          <use href="#rose-w-hd" x="150" y="240"/>
+          <use href="#rose-p-hd" x="140" y="290"/>
+          <use href="#rose-p-hd" x="100" y="310" transform="scale(0.9)"/> <!-- Nueva -->
+        </g>
+
+        <!-- GRUPO DERECHO -->
+        <g class="sway-right">
+          <use href="#spider-hd" x="320" y="210"/>
+          <use href="#spider-hd" x="280" y="130"/>
+          <use href="#spider-hd" x="340" y="270"/> <!-- Nueva -->
+          <use href="#tulip-p-hd" x="290" y="240" transform="scale(0.95)"/>
+          <use href="#tulip-p-hd" x="320" y="180" transform="scale(0.9)"/> <!-- Nueva -->
+          <use href="#tulip-w-hd" x="270" y="190"/>
+          <use href="#tulip-w-hd" x="300" y="140" transform="scale(0.85)"/> <!-- Nueva -->
+          <use href="#rose-w-hd" x="250" y="240"/>
+          <use href="#rose-p-hd" x="260" y="290"/>
+          <use href="#rose-p-hd" x="300" y="310" transform="scale(0.9)"/> <!-- Nueva -->
+        </g>
+
+        <!-- GRUPO CENTRO Y NÚCLEO -->
+        <g class="sway-center">
+          <!-- Lirios Centro -->
+          <use href="#spider-hd" x="200" y="80" transform="scale(1.15)"/>
+          <use href="#spider-hd" x="200" y="280"/>
+          <use href="#spider-hd" x="150" y="100" transform="scale(0.9)"/> <!-- Nueva -->
+          <use href="#spider-hd" x="250" y="100" transform="scale(0.9)"/> <!-- Nueva -->
+
+          <!-- Tulipanes Centro -->
+          <use href="#tulip-w-hd" x="175" y="150"/>
+          <use href="#tulip-w-hd" x="225" y="150"/>
+          <use href="#tulip-w-hd" x="200" y="110" transform="scale(0.95)"/> <!-- Nueva -->
+          <use href="#tulip-p-hd" x="165" y="180"/>
+          <use href="#tulip-p-hd" x="235" y="180"/>
+          <use href="#tulip-p-hd" x="200" y="210"/> <!-- Nueva -->
+
+          <!-- Rosas Centro -->
+          <use href="#rose-w-hd" x="200" y="140"/>
+          <use href="#rose-w-hd" x="160" y="210" transform="scale(0.95)"/> <!-- Nueva -->
+          <use href="#rose-w-hd" x="240" y="210" transform="scale(0.95)"/> <!-- Nueva -->
+          <use href="#rose-p-hd" x="200" y="250" transform="scale(1.1)"/>
+          <use href="#rose-p-hd" x="170" y="270" transform="scale(0.9)"/> <!-- Nueva -->
+          <use href="#rose-p-hd" x="230" y="270" transform="scale(0.9)"/> <!-- Nueva -->
+        </g>
+
+        <!-- PAPEL COREANO ENVOLTURA FRONTAL CON LAZO -->
+        <g>
+          <path d="M 50 290 L 140 480 Q 200 505 260 480 L 350 290 Q 200 340 50 290 Z" fill="url(#koreanWhite)" opacity="0.96"/>
+          <path d="M 70 310 L 150 480 Q 200 498 250 480 L 330 310 Q 200 350 70 310 Z" fill="url(#koreanPink)" opacity="0.9"/>
+
+          <!-- Lazo Rosado -->
+          <path d="M 165 420 Q 200 410 235 420 Q 215 445 200 432 Q 185 445 165 420 Z" fill="#ff4081" stroke="#ffffff" stroke-width="1"/>
+          <circle cx="200" cy="424" r="7" fill="#f50057"/>
+          <path d="M 195 428 Q 180 465 160 498 L 178 500 Q 198 468 200 428 Z" fill="#ff4081"/>
+          <path d="M 205 428 Q 220 465 240 498 L 222 500 Q 202 468 200 428 Z" fill="#ff4081"/>
+        </g>
+
+      </svg>
+    </div>
+  `;
+
+  garden.innerHTML = bouquetHTML;
+}
+
+
+      // Al hacer clic en "Ábrelo ❤️"
+      startBtn.onclick = function() {
+        if(bgMusic) {
+          bgMusic.play().catch(e => console.log(e));
         }
-        ctx.restore();
-      }
+        
+        hero.classList.add("fade-out");
 
-      // DIBUJAR HOJAS
-      function drawLeaf(x, y, angle, scale) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-        ctx.scale(scale, scale);
+        setTimeout(() => {
+          hero.style.display = "none";
+          mainScene.classList.remove("hidden");
 
-        const grad = ctx.createLinearGradient(0, 0, 0, -30);
-        grad.addColorStop(0, "#1b5e20");
-        grad.addColorStop(1, "#66bb6a");
+          // 1. Crecen tulipanes
+          growGarden();
 
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.quadraticCurveTo(-15, -15, 0, -30);
-        ctx.quadraticCurveTo(15, -15, 0, 0);
-        ctx.fillStyle = grad;
-        ctx.shadowColor = "#a7f3d0";
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.restore();
-      }
+          // 2. Carta
+          setTimeout(() => {
+            document.getElementById("typewriter-container").classList.add("show-element");
+            startTypewriter();
+          }, 3500);
 
-      // 1. TULIPÁN 3D
-      function drawTulip(x, y, scale) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.scale(scale, scale);
+          // 3. Fotos
+          setTimeout(() => {
+            document.getElementById("photos-section").classList.add("show-element");
+          }, 8500);
 
-        const gradBody = ctx.createRadialGradient(0, -20, 5, 0, -20, 30);
-        gradBody.addColorStop(0, "#ffb3c1");
-        gradBody.addColorStop(0.6, "#ff2a75");
-        gradBody.addColorStop(1, "#a00037");
+          // 4. Corazón y propuesta
+          setTimeout(() => {
+            document.getElementById("heart-section").classList.add("show-element");
+            document.getElementById("final-section").classList.add("show-element");
+          }, 11000);
 
-        ctx.shadowColor = "#ff4081";
-        ctx.shadowBlur = 18;
+        }, 1500);
+      };
 
-        // Pétalo Trasero
-        ctx.beginPath();
-        ctx.ellipse(0, -25, 22, 32, 0, 0, Math.PI * 2);
-        ctx.fillStyle = gradBody;
-        ctx.fill();
-
-        // Pétalos Laterales
-        ctx.beginPath();
-        ctx.ellipse(-10, -20, 15, 28, -0.2, 0, Math.PI * 2);
-        ctx.fillStyle = "#ff758f";
-        ctx.fill();
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.ellipse(10, -20, 15, 28, 0.2, 0, Math.PI * 2);
-        ctx.fillStyle = "#ff4d6d";
-        ctx.fill();
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        // Centro Brillante
-        const gradCenter = ctx.createLinearGradient(0, -40, 0, 0);
-        gradCenter.addColorStop(0, "#ffffff");
-        gradCenter.addColorStop(1, "#ff80ab");
-
-        ctx.beginPath();
-        ctx.ellipse(0, -18, 12, 24, 0, 0, Math.PI * 2);
-        ctx.fillStyle = gradCenter;
-        ctx.fill();
-
-        ctx.restore();
-      }
-
-      // 2. FLOR 5 PÉTALOS CON CENTRO AMARILLO
-      function drawPetal5(x, y, scale) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.scale(scale, scale);
-
-        ctx.shadowColor = "#ff2a75";
-        ctx.shadowBlur = 16;
-
-        const petalGrad = ctx.createRadialGradient(0, -18, 2, 0, -18, 20);
-        petalGrad.addColorStop(0, "#ffccd5");
-        petalGrad.addColorStop(0.7, "#ff4d6d");
-        petalGrad.addColorStop(1, "#c9184a");
-
-        for (let i = 0; i < 5; i++) {
-          ctx.beginPath();
-          ctx.rotate((Math.PI * 2) / 5);
-          ctx.ellipse(0, -20, 13, 24, 0, 0, Math.PI * 2);
-          ctx.fillStyle = petalGrad;
-          ctx.fill();
-          ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = 1.2;
-          ctx.stroke();
-        }
-
-        // Botón Amarillo Brillante
-        ctx.beginPath();
-        ctx.arc(0, 0, 9, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffeb3b";
-        ctx.shadowColor = "#ffff00";
-        ctx.shadowBlur = 20;
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(0, 0, 4, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.fill();
-
-        ctx.restore();
-      }
-
-      // 3. LIRIO ARAÑA NEÓN
-      function drawSpiderLily(x, y, scale) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.scale(scale, scale);
-
-        ctx.shadowColor = "#ff1744";
-        ctx.shadowBlur = 20;
-
-        const angles = [-0.8, -0.4, 0, 0.4, 0.8, 2.2, 2.6, 3.0, 3.4];
-        angles.forEach((ang) => {
-          ctx.save();
-          ctx.rotate(ang);
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.quadraticCurveTo(-12, -25, 0, -40);
-          ctx.quadraticCurveTo(12, -25, 0, 0);
-          ctx.fillStyle = "#ff1744";
-          ctx.fill();
-          ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-          ctx.restore();
-        });
-
-        const stamens = [-1.0, -0.5, 0, 0.5, 1.0];
-        stamens.forEach((st) => {
-          ctx.save();
-          ctx.rotate(st);
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.quadraticCurveTo(-15, -35, -22, -48);
-          ctx.strokeStyle = "#ff80ab";
-          ctx.lineWidth = 1.8;
-          ctx.stroke();
-
-          ctx.beginPath();
-          ctx.arc(-22, -48, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = "#ffeb3b";
-          ctx.shadowColor = "#ffff80";
-          ctx.shadowBlur = 10;
-          ctx.fill();
-          ctx.restore();
-        });
-
-        ctx.restore();
-      }
-
-      // PARTÍCULAS / CORAZONES FLOTANTES
-      function drawParticles() {
-        particles.forEach((p) => {
-          p.y -= p.speed;
-          if (p.y < -20) p.y = canvas.height + 20;
-
-          ctx.save();
-          ctx.globalAlpha = p.opacity;
-          if (p.isHeart) {
-            ctx.font = `${p.size}px sans-serif`;
-            ctx.fillText("💗", p.x, p.y);
+      // Máquina de escribir
+      function startTypewriter() {
+        let index = 0;
+        typewriterElement.textContent = "";
+        const timer = setInterval(() => {
+          if (index < messageText.length) {
+            typewriterElement.textContent += messageText.charAt(index);
+            index++;
           } else {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
-            ctx.strokeStyle = "#ff80ab";
-            ctx.lineWidth = 2;
-            ctx.shadowColor = "#ff4081";
-            ctx.shadowBlur = 12;
-            ctx.stroke();
+            clearInterval(timer);
           }
-          ctx.restore();
-        });
+        }, 45);
       }
 
-      // BUCLE DE ANIMACIÓN
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawParticles();
+      // Click corazón
+      heartBtn.onclick = function() {
+        alert("¡Eres mi persona favorita en todo el universo! 💖✨");
+        createPetalBurst();
+      };
 
-        if (progress < 1) {
-          progress += 0.009;
+      function createPetalBurst() {
+        for (let i = 0; i < 20; i++) {
+          const petal = document.createElement("div");
+          petal.innerHTML = "🌸";
+          petal.className = "falling-petal";
+          petal.style.left = Math.random() * 100 + "vw";
+          petal.style.fontSize = Math.random() * 20 + 15 + "px";
+          petal.style.animationDuration = (Math.random() * 2 + 2) + "s";
+          document.body.appendChild(petal);
+          setTimeout(() => petal.remove(), 4000);
         }
-
-        flowers.forEach((f) => {
-          drawStem(240, 510, f.x, f.maxY, progress);
-
-          if (progress > 0.5) {
-            const flowerProgress = Math.min((progress - 0.5) * 2, 1);
-            const currentScale = f.scale * flowerProgress;
-
-            if (f.type === 'tulip') drawTulip(f.x, f.maxY, currentScale);
-            if (f.type === 'petal5') drawPetal5(f.x, f.maxY, currentScale);
-            if (f.type === 'spider') drawSpiderLily(f.x, f.maxY, currentScale);
-          }
-        });
-
-        requestAnimationFrame(animate);
       }
 
-      animate();
-    };
+      // Botones Aceptar / Rechazar
+      const acceptBtn = document.getElementById("accept-btn");
+      const rejectBtn = document.getElementById("reject-btn");
+      const proposalButtons = document.getElementById("proposal-buttons");
+      const celebrationMessage = document.getElementById("celebration-message");
 
-    // Vínculo secundario seguro por si acaso
-    document.addEventListener("DOMContentLoaded", () => {
-      const btn = document.getElementById("heartBtn");
-      if (btn) {
-        btn.addEventListener("click", () => window.growGarden());
+      let rejectClicks = 0;
+
+      rejectBtn.onclick = function() {
+        rejectClicks++;
+
+        if (rejectClicks <= 4) {
+          const acceptScale = 1 + (rejectClicks * 0.35);
+          const acceptFontSize = 1.1 + (rejectClicks * 0.2);
+          acceptBtn.style.transform = `scale(${acceptScale})`;
+          acceptBtn.style.fontSize = `${acceptFontSize}rem`;
+
+          const rejectScale = 1 - (rejectClicks * 0.18);
+          const rejectFontSize = 1.1 - (rejectClicks * 0.15);
+          rejectBtn.style.transform = `scale(${rejectScale})`;
+          rejectBtn.style.fontSize = `${rejectFontSize}rem`;
+        } else {
+          rejectClicks = 0;
+          acceptBtn.style.transform = "scale(1)";
+          acceptBtn.style.fontSize = "1.1rem";
+          rejectBtn.style.transform = "scale(1)";
+          rejectBtn.style.fontSize = "1.1rem";
+        }
+      };
+
+      acceptBtn.onclick = function() {
+        proposalButtons.style.display = "none";
+        celebrationMessage.classList.remove("hidden-element");
+        celebrationMessage.classList.add("show-element");
+        startInfinitePetals();
+      };
+
+      function startInfinitePetals() {
+        const petals = ["🌸", "🌺", "🌷", "💖"];
+        setInterval(() => {
+          const petal = document.createElement("div");
+          petal.className = "falling-petal";
+          petal.textContent = petals[Math.floor(Math.random() * petals.length)];
+          petal.style.left = Math.random() * 100 + "vw";
+          petal.style.fontSize = Math.random() * 15 + 15 + "px";
+          
+          const duration = Math.random() * 3 + 3;
+          petal.style.animationDuration = duration + "s";
+
+          document.body.appendChild(petal);
+          setTimeout(() => petal.remove(), duration * 1000);
+        }, 250);
       }
     });
   </script>
